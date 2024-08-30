@@ -30,7 +30,7 @@ const config: Config = {
         bodydark: "#AEB7C0",
         bodydark1: "#DEE4EE",
         bodydark2: "#8A99AF",
-        secondary: "#80CAEE",
+        secondary: "#FDC220",
         stroke: "#E2E8F0",
         gray: "#EFF4FB",
         graydark: "#333A48",
@@ -265,6 +265,20 @@ const config: Config = {
         5: "0px 1px 5px rgba(0, 0, 0, 0.2)",
       },
       keyframes: {
+        blob: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)"
+          },
+          "33%":{
+              transform: " translate(30px, -50px) scale(1.2)"
+          },
+           "66%": {
+            transform: "translate(-20px, 20px) scale(0.9)"
+          },
+            "100%": {
+            transform: "translate(0px, 0px) scale(1)"
+          }
+        },
         linspin: {
           "100%": { transform: "rotate(360deg)" },
         },
@@ -310,6 +324,7 @@ const config: Config = {
         },
       },
       animation: {
+          blob: 'blob 4s infinite',
         linspin: "linspin 1568.2353ms linear infinite",
         easespin: "easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both",
         "left-spin":
