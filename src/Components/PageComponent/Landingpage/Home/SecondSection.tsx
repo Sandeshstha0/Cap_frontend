@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function SecondSection() {
     return (
-        <section className="max-container padding-container flex flex-col gap-20 py-10 pb-32 md:gap-28 lg:py-20 xl:flex-row">
+        <section className="max-container text-white bg-primary padding-container flex flex-col gap-20 py-10 pb-32 md:gap-28 lg:py-20 xl:flex-row">
             <div className='flex w-full'>
                 <div className='w-1/2 text-center font-bold text-7xl '>
                     <h1 className='text-secondary'>A Guide to</h1>

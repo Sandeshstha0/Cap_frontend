@@ -41,7 +41,7 @@ function HeroSection() {
                 <div className="relative  flex w-[600px] flex-col gap-8 justify-center rounded-3xl px-7 ">
 
 
-                    <Image src="/15.png" alt="close" width={1000} height={24} className='shadow-b-lg' />
+                    <Image src="/155.png" alt="close" width={1000} height={24} className='shadow-b-lg' />
                 </div> 
 
             </div>
