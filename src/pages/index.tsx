@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-white">
+      <div className=" bg-primary overflow-y-hidden">
         <HeroSection />
         <SecondSection />
         <DoYouKnow />
