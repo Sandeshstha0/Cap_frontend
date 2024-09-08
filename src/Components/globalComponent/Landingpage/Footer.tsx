@@ -28,7 +28,7 @@ export default function Footer() {
               <div className="flex flex-col items-center md:items-start space-y-3">
                 <Link href="/jobs">Blogs</Link>
                 <Link href="/about">About us</Link>
-                <Link href="/contact">Contact us</Link>
+                <Link href="/contact">Contact Us</Link>
                 <Link href="/privacy-policy">Privacy Policy</Link>
               </div>
             </div>

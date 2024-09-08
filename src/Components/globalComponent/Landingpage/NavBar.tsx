@@ -23,14 +23,14 @@ function Navbar() {
           <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Home
           </Link>
-          <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <a href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Post
           </a>
           <a href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             About Us
           </a>
-          <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Contact
+          <a href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+            Contact Us
           </a>
         </div>
 
