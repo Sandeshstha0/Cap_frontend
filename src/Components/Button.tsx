@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'font-semibold rounded focus:outline-none focus:ring';
   const variantStyles = {
     primary: 'bg-secondary  text-black  px-8 rounded-full',
-    secondary: 'bg-gray-500 hover:bg-gray-600 text-white focus:ring-gray-300',
+    secondary: 'bg-primary text-sm text-white  px-6 rounded-full',
     success: 'bg-green-500 hover:bg-green-600 text-white focus:ring-green-300',
     danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-300',
   };
