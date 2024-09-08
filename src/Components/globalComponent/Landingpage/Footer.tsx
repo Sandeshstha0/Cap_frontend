@@ -26,8 +26,7 @@ export default function Footer() {
             <div className="p-2 flex flex-col items-center md:items-start text-white">
               <p className="mb-4 text-center md:text-left">Pages</p>
               <div className="flex flex-col items-center md:items-start space-y-3">
-                <Link href="/jobs">Jobs</Link>
-                <Link href="/internships">Internships</Link>
+                <Link href="/jobs">Blogs</Link>
                 <Link href="/about">About us</Link>
                 <Link href="/contact">Contact us</Link>
                 <Link href="/privacy-policy">Privacy Policy</Link>
@@ -35,23 +34,14 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center mt-4 md:flex-row md:mt-0 md:space-x-3">
-            <div className="p-2 flex flex-col items-center md:items-start text-white">
-              <p className="mb-4 text-center md:text-left">Job Field</p>
-              <div className="flex flex-col items-center md:items-start space-y-3">
-                <p>IT</p>
-                <p>Business</p>
-                <p>Education</p>
-              </div>
-            </div>
-          </div>
+          
 
           <div className="flex flex-col items-center mt-4 md:flex-row md:mt-0 md:space-x-3">
             <div className="p-2 flex flex-col items-center md:items-start text-white">
               <p className="mb-4 text-center md:text-left">Contact Us</p>
               <div className="flex flex-col items-center md:items-start space-y-3">
-                <p>Phone number: 981234567</p>
-                <p>Mail: Contact@hrxplor.com</p>
+                <p>Phone number: 9819129372</p>
+                <p>Mail: Contact@budgetexpert.com</p>
               </div>
             </div>
           </div>
