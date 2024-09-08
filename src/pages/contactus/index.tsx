@@ -1,83 +1,66 @@
+/* eslint-disable @next/next/no-img-element */
 import Layout from '@/Components/globalComponent/Landingpage/MainLayout';
-import React, { Component } from 'react';
 
-export class Index extends Component {
-  render() {
-    return (
-      <Layout>
-        {/* Main Container */}
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-star bg-white t mx-10 mt-10 md:mx-2000">
-          
-          {/* Contact Form Section */}
-          <div className="w-100 md:w-1/2 mb-10 md:mb-0">
-            <h2 className='text-3xl font-semibold text-primary text-center mt-6'>
-              Contact us
-            </h2>
+export default function index() {
+  return (
+    <Layout>
+      {/* Main Container */}
+      <div className="flex flex-col mt-16 md:flex-row justify-between items-center bg-white px-6 md:px-16 py-10 gap-8">
+        
+        {/* Contact Form Section */}
+        <div className="w-full md:w-2/5">
+          <h2 className='text-4xl font-bold text-black  text-center mb-8'>
+            Contact Us
+          </h2>
 
-            {/* Form */}
-            <div className="space-y-4">
-              {/* Name Input */}
-              <div className="flex items-center space-x-15 text">
-                <span className="material-icons text-4xl"></span>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="w-100 p-4 rounded-full bg-teal-500 text-white"
-                />
-              </div>
+          {/* Form */}
+          <div className="space-y-6">
+            {/* Name Input */}
+            <div className="flex items-center space-x-4">
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full p-4 rounded-full bg-[#86C2C6] placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-teal-300"
+              />
+            </div>
 
-              {/* Email Input */}
-              <div className="flex items-center space-x-15 ">
-                <span className="material-icons text-4xl"></span>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-100 p-4 rounded-full bg-teal-500  text-white"
-                />
-              </div>
-              </div>
+            {/* Email Input */}
+            <div className="flex items-center space-x-4">
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full p-4 rounded-full bg-[#86C2C6] placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-teal-300"
+              />
+            </div>
 
-              {/* Message Input */}
-              <div className="flex items-center space-x-15 py-4">
-                <span className="material-icons text-4xl"></span>
-                <textarea
-                  placeholder="Message"
-                  className="w-100  p-4 rounded-full bg-teal-500 text-white"
-                  rows={4}
-                ></textarea>
-              </div>
+            {/* Message Input */}
+            <div className="flex items-center space-x-4">
+              <textarea
+                placeholder="Your Message"
+                className="w-full p-4 rounded-lg bg-[#86C2C6] placeholder-white text-white focus:outline-none focus:ring-2 focus:ring-teal-300"
+                rows={5}
+              ></textarea>
+            </div>
 
-              {/* Send Message Button */}
-              <div className="flex items-center space-x-4">
-          <button className="bg-primary text-gray-900 font-medium rounded-full px-6 py-2  text-white transition duration-300">
-          
+            {/* Send Message Button */}
+            <div className="text-center">
+              <button className="bg-primary text-xl w-full placeholder-white text-white font-semibold rounded-full px-8 py-3 transition duration-300  focus:outline-none focus:ring-4 focus:ring-blue-300">
                 Send Message
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Image Section */}
-          <div className="w-100 md:w-1/2 flex justify-center">
-            <img
-              src="/contactus.png"
-              className="rounded-lg w-100max-w-md h-auto"
-              alt="Contact Us"
-              
-            />
-          
-          <div className="w-100 md:w-1/2 flex justify-center ">
-            <img
-              src="/chat.png"
-              className="rounded-lg w-50 max-w-md h-auto"
-              alt="Contact Us"
-              
-            />
-            </div>
-            </div>
-            </div>
-      </Layout>
-    );
-  }
+        {/* Image Section */}
+        <div className="w-full md:w-1/2 flex flex-col items-center space-y-8">
+          <img
+            src="/16.png"
+            className="rounded-lg w-full max-w-md h-auto "
+            alt="Contact Us"
+          />
+        
+        </div>
+      </div>
+    </Layout>
+  );
 }
-
-export default Index;

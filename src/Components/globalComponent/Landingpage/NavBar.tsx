@@ -15,28 +15,28 @@ function Navbar() {
             alt="Logo"
             className="rounded-full"
           />
-          <span className="text-white text-lg font-semibold">BrandName</span>
+          <span className="text-white text-lg font-semibold">Budget Expert</span>
         </div>
 
         <div className='flex space-x-8'>
 
 
 
-        {/* Navigation Links Section */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Home
-          </Link>
-          <Link href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Post
-          </Link>
-          <Link href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            About Us
-          </Link>
-          <Link href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Contact
-          </Link>
-        </div>
+          {/* Navigation Links Section */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Home
+            </Link>
+            <Link href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Post
+            </Link>
+            <Link href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              About Us
+            </Link>
+            <Link href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Contact
+            </Link>
+          </div>
 
           {/* Button Section */}
           <div className="flex items-center space-x-4">
