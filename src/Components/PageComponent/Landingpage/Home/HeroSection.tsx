@@ -20,7 +20,7 @@ function HeroSection() {
                     height={70}
                     className="absolute left-[-1px] top-[-35px] w-10 lg:w-[50px]"
                 />
-                <h1 className="font-bold  lg: text-8xl text-secondary">Budget </h1>
+                <h1 className="font-bold  lg: text-8xl text-secondary">Budget  </h1>
                 <h1 className="font-bold text-8xl  ml-24">Expert</h1>
                 <p className="regular-16 mt-6  text-sm xl:max-w-[550px] ">
                     We want to be on each of your journeys seeking the satisfaction of seeing the incorruptible beauty of nature. We can help you on an adventure around the world in just one app
