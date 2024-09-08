@@ -21,7 +21,7 @@ export default function Posts() {
             <div className="grid grid-cols-2 gap-4 p-4 max-w-screen-lg mx-auto text-center text-white">
                 <div className="bg-gray-100 p-6">
 
-                    <div className="shadow-lg bg-white items-center rounded-lg cursor-pointer dark:bg-boxdark dark:text-white transition hover:shadow-xl">
+                    <div className="shadow-lg  items-center rounded-lg cursor-pointer bg-boxdark dark:text-white transition hover:shadow-xl">
                         {/* Image Section */}
                         <div className="w-full h-52 overflow-hidden mb-4 p-4 pb-0 rounded-t-lg">
                             <Image
