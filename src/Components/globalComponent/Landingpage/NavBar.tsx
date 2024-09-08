@@ -33,7 +33,7 @@ function Navbar() {
           <a href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             About Us
           </a>
-          <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <a href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Contact
           </a>
         </div>
