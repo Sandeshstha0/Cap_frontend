@@ -19,7 +19,7 @@ function Navbar() {
 
         {/* Navigation Links Section */}
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <a href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Home
           </a>
           <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">

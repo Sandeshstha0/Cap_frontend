@@ -13,7 +13,7 @@ export default function Footer() {
 
           <div className="flex items-center justify-center md:items-start md:mt-2">
             <Image
-              src="/assests/footer/logo.png"
+              src="/logo.png"
               alt="logo"
               style={{ backgroundColor: "#20364B" }}
               width={100}
