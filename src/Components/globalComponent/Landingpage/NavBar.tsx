@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 function Navbar() {
@@ -19,9 +20,9 @@ function Navbar() {
 
         {/* Navigation Links Section */}
         <div className="hidden md:flex items-center space-x-6">
-          <a href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Home
-          </a>
+          </Link>
           <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Post
           </a>
