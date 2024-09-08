@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <section
     
-      className="px-2 py-10 md:px-6 dark:bg-boxdark"
+      className="px-2 py-10 md:px-6 bg-boxdark"
     >
       <div className="container mx-auto max-w-[1250px]">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between border-b-4 pb-6 border-cyan-900  ">
