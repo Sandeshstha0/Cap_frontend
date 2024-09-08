@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
     <Layout>
-      <div className=" bg-primary overflow-y-hidden">
+      <div className=" bg-primary overflow-y-hidden mt-18" >
        
         <HeroSection />
         <SecondSection />
