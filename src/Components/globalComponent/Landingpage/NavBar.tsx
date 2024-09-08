@@ -18,27 +18,33 @@ function Navbar() {
           <span className="text-white text-lg font-semibold">BrandName</span>
         </div>
 
-        {/* Navigation Links Section */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Home
-          </Link>
-          <a href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Post
-          </a>
-          <Link href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            About Us
-          </Link>
-          <Link href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
-            Contact
-          </Link>
-        </div>
+        <div className='flex space-x-8'>
 
-        {/* Button Section */}
-        <div className="flex items-center space-x-4">
-          <button className="bg-[#facc15] text-gray-900 font-medium rounded-full px-6 py-2 hover:bg-yellow-500 transition duration-300">
-            Login
-          </button>
+
+
+          {/* Navigation Links Section */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Home
+            </Link>
+            <a href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Post
+            </a>
+            <Link href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              About Us
+            </Link>
+            <Link href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+              Contact
+            </Link>
+          </div>
+
+          {/* Button Section */}
+          <div className="flex items-center space-x-4">
+            <button className="bg-[#facc15] text-gray-900 font-medium rounded-full px-6 py-2 hover:bg-yellow-500 transition duration-300">
+              Login
+            </button>
+          </div>
+
         </div>
 
         {/* Mobile Menu */}
