@@ -25,7 +25,7 @@ function Navbar() {
           <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Post
           </a>
-          <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <a href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             About Us
           </a>
           <a href="#" className="text-white font-medium hover:text-[#facc15] transition duration-200">
