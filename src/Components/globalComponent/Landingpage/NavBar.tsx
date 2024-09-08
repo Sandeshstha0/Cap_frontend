@@ -27,15 +27,15 @@ function Navbar() {
           <Link href="/" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Home
           </Link>
-          <a href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          <Link href="/posts" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Post
-          </a>
-          <a href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          </Link>
+          <Link href="/aboutus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             About Us
-          </a>
-          <a href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
+          </Link>
+          <Link href="/contactus" className="text-white font-medium hover:text-[#facc15] transition duration-200">
             Contact
-          </a>
+          </Link>
         </div>
 
           {/* Button Section */}
