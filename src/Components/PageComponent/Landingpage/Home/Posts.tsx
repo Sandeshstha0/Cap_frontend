@@ -16,7 +16,9 @@ export default function Posts() {
         <div>
             <div className='flex justify-between px-24  mt-24' >
                 <h1 className='text-5xl font-semibold text-secondary px-6'>Posts</h1>
+                <Link href={`/posts`}> 
                 <p className='text-secondary font-light hover:cursor-pointer '>See more</p>
+                </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 p-4 max-w-screen-lg mx-auto text-center text-white">
@@ -65,7 +67,7 @@ export default function Posts() {
 
 
                 <div className="bg-gray-200 ">
-                    {PostData.map((item, index) =>
+                {PostData.slice(0, 3).map((item, index) =>
                         <div key={index} className='w-full px-2 md:px-2  rounded-lg mt-4 shadow-lg bg-secondary' >
                             <div className='flex flex-col-reverse md:flex-row '>
                                 <div className='flex   p-3 '>

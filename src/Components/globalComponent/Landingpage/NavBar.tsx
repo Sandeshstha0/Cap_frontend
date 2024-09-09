@@ -7,7 +7,8 @@ function Navbar() {
     <nav className="bg-primary fixed top-0 left-0 w-full z-50 px-4 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4">
         {/* Logo Section */}
-        <div className="flex items-center space-x-3">
+        <Link href={`/`}> 
+        <div className="flex items-center space-x-3 cursor-pointer">
           <Image
             src="/logo.png"
             width={50}
@@ -17,6 +18,7 @@ function Navbar() {
           />
           <span className="text-white text-lg font-semibold">Budget Expert</span>
         </div>
+        </Link>
 
         <div className='flex space-x-8'>
 

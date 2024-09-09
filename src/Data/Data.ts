@@ -20,7 +20,7 @@ export const PostData = [
     id:2,
     time: 'October 5, 2024',
     title: 'sandesh_shrestha',
-    image: '/budgetmanagement.png',
+    image: '/budget.jpg',
     author: 'Sandesh Stha',
     slug: 'sandesh_shrestha',
     description: `
@@ -38,7 +38,58 @@ export const PostData = [
     id:3,
     time: 'November 15, 2024',
     title: 'The Importance of Setting Budget Categories',
-    image: '/importance.png',
+    image: '/budget.jpg',
+    author: 'Sandesh Stha',
+    slug: 'the_importance',
+    description: `
+      <p>Setting budget categories helps in organizing your finances. Here’s why it’s important:</p>
+      <ul>
+        <li><strong>Clarity:</strong> It provides a clear view of where your money is going.</li>
+        <li><strong>Control:</strong> Helps in managing and controlling spending in different areas.</li>
+        <li><strong>Goal Setting:</strong> Assists in setting and achieving financial goals.</li>
+      </ul>
+      <p>By categorizing your budget, you gain better control and insight into your financial situation.</p>
+    `,
+  },
+  {
+    id:4,
+    time: 'November 15, 2024',
+    title: 'The Importance of Setting Budget Categories',
+    image: '/budget.jpg',
+    author: 'Sandesh Stha',
+    slug: 'the_importance',
+    description: `
+      <p>Setting budget categories helps in organizing your finances. Here’s why it’s important:</p>
+      <ul>
+        <li><strong>Clarity:</strong> It provides a clear view of where your money is going.</li>
+        <li><strong>Control:</strong> Helps in managing and controlling spending in different areas.</li>
+        <li><strong>Goal Setting:</strong> Assists in setting and achieving financial goals.</li>
+      </ul>
+      <p>By categorizing your budget, you gain better control and insight into your financial situation.</p>
+    `,
+  },
+  {
+    id:5,
+    time: 'November 15, 2024',
+    title: 'The Importance of Setting Budget Categories',
+    image: '/budget.jpg',
+    author: 'Sandesh Stha',
+    slug: 'the_importance',
+    description: `
+      <p>Setting budget categories helps in organizing your finances. Here’s why it’s important:</p>
+      <ul>
+        <li><strong>Clarity:</strong> It provides a clear view of where your money is going.</li>
+        <li><strong>Control:</strong> Helps in managing and controlling spending in different areas.</li>
+        <li><strong>Goal Setting:</strong> Assists in setting and achieving financial goals.</li>
+      </ul>
+      <p>By categorizing your budget, you gain better control and insight into your financial situation.</p>
+    `,
+  },
+  {
+    id:5,
+    time: 'November 15, 2024',
+    title: 'The Importance of Setting Budget Categories',
+    image: '/budget.jpg',
     author: 'Sandesh Stha',
     slug: 'the_importance',
     description: `
