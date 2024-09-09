@@ -38,7 +38,7 @@ export const PostData = [
     id:3,
     time: 'November 15, 2024',
     title: 'The Importance of Setting Budget Categories',
-    image: '/budget.jpg',
+    image: '/8.jpg',
     author: 'Sandesh Stha',
     slug: 'the_importance',
     description: `

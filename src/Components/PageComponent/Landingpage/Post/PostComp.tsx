@@ -82,7 +82,7 @@ export default function PostComp() {
             <div className='flex flex-col-reverse md:flex-row space-x-4 lg:items-center'>
 
               <div className='flex items-center justify-center '>
-                <img src={item.image} className='object-cover w-65 h-65  rounded-lg  ' alt='Background' />
+                <img src={item.image} className='object-cover w-65 h-70  rounded-lg  ' alt='Background' />
               </div>
 
               {/* Left Column */}
@@ -91,16 +91,20 @@ export default function PostComp() {
                   <p className='text-sm md:text-base font-medium mb-2 md:mb-4'>
                     {item.time}
                   </p>
-                  <h1 className='text-xl md:text-4xl font-bold mb-2 md:mb-4'>
+                  <h1 className='text-xl md:text-3xl font-bold mb-2 md:mb-4'>
                     {item.title}
                   </h1>
+                  <h1 className='text-xl md:text-lg font-semibold mb-2 md:mb-2'>
+                        {item.title.length > 100 ? item.title.substring(0, 100) + '...' : item.title}
+                      </h1>
+                
 
                 </div>
 
                 <div className='flex flex-col gap-y-2 md:gap-y-4 pt-4'>
                   <span className='flex items-center gap-x-2'>
                     <IoIosPerson />
-                    {item.author}
+                    Author:  {item.author}
                   </span>
 
                 </div>

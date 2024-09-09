@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function Posts() {
     const handleClick = () => {
-        alert('Button clicked!');
+     
     };
     return (
         <div>
@@ -72,7 +72,7 @@ export default function Posts() {
                             <div className='flex flex-col-reverse md:flex-row '>
                                 <div className='flex   p-3 '>
                                     {/* <Image src="/aboutus.png" alt='' width={500} height={500} className='rounded-xl' /> */}
-                                    <img src='/aboutus.png' className='object-cover w-35  ' alt='Background' />
+                                    <img src={item.image} className='object-cover w-35 rounded-lg  ' alt='Background' />
                                 </div>
 
                                 <div className='flex flex-col w-2/3 px-4 py-3.5 text-primary'>

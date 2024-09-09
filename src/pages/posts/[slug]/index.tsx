@@ -51,9 +51,9 @@ const PostDescription = () => {
             {PostData.map((item, index) =>
               <div key={index} className='w-full px-2 md:px-2  rounded-lg mt-4 shadow-lg bg-white' >
                 <div className='flex flex-col-reverse md:flex-row '>
-                  <div className='flex   '>
+                  <div className='flex p-3  '>
                     {/* <Image src="/aboutus.png" alt='' width={500} height={500} className='rounded-xl' /> */}
-                    <img src={item.image} className='object-cover w-20   ' alt='Background' />
+                    <img src={item.image} className='object-cover w-20 h-25   ' alt='Background' />
                   </div>
 
                   <div className='flex flex-col w-2/3 px-4 py-3.5 text-primary'>
