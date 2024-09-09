@@ -6,6 +6,7 @@ import { ImNotification } from 'react-icons/im';
 import { BsTelephone } from 'react-icons/bs';
 import Button from '@/Components/Button';
 import { PostData } from '@/Data/Data';
+import Link from 'next/link';
 
 export default function Posts() {
     const handleClick = () => {
@@ -80,9 +81,11 @@ export default function Posts() {
                                         <h1 className='text-xl md:text-lg font-bold mb-2 md:mb-2'>
                                             {item.title}
                                         </h1>
+                                        <Link href={`/posts/${item.slug}`}>
                                         <div className='text-right' >
                                             <Button label="Read" onClick={handleClick} variant="secondary" />
                                         </div>
+                                        </Link>
 
 
                                     </div>

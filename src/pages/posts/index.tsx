@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export default function index() {
   const handleClick = () => {
-    alert('Button clicked!');
+      
   };
   return (
     <Layout>
