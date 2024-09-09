@@ -19,7 +19,8 @@ function Navbar() {
               alt="Logo"
               className="rounded-full"
             />
-            <span className="text-white text-lg font-semibold">Budget Expert</span>
+            <span className="text-secondary text-lg font-semibold">Budget </span>
+            <span className="text-white text-lg font-semibold">Expert </span>
           </div>
         </Link>
 
