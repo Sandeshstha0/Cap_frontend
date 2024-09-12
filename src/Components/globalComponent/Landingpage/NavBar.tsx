@@ -43,9 +43,11 @@ function Navbar() {
 
           {/* Button Section */}
           <div className="flex items-center space-x-4">
+           <Link href="/login">
             <button className="bg-[#facc15] text-gray-900 font-medium rounded-full px-6 py-2 hover:bg-yellow-500 transition duration-300">
               Login
             </button>
+            </Link>
           </div>
         </div>
 

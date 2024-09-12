@@ -48,7 +48,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Dashboard",
-        route: "/",
+        route: "/admin/dashboard",
 
       },
       {
@@ -79,8 +79,8 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Applicants",
-        route: "/applicants",
+        label: "Manage User",
+        route: "/admin/manageuser",
 
       },
       {
