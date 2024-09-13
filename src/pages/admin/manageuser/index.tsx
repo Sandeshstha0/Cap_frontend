@@ -6,7 +6,7 @@ export default function index() {
   return (
 <DefaultLayout>
     <div>
-      Hello runche
+      Hello Users
     </div>
     </DefaultLayout>
   )

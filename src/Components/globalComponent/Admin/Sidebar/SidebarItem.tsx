@@ -29,7 +29,7 @@ const SidebarItem = ({ item, pageName, setPageName }: any) => {
         <Link
           href={item.route}
           onClick={handleClick}
-          className={`${isItemActive ? "bg-slate-200 text-black  dark:bg-meta-4 rounded-lg" : ""} group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium  duration-300 ease-in-out hover:bg-blue-200 hover:text-slate-400 dark:hover:bg-meta-4`}
+          className={`${isItemActive ? "bg-primary text-white   rounded-lg" : ""} group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium  duration-300 ease-in-out hover:bg-primary hover:text-slate-400 `}
         >
           {item.icon}
           {item.label}
