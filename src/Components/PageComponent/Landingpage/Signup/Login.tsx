@@ -11,25 +11,25 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white text-primary">
-      {/* Container for both image and form with equal width */}
-      <div className="flex w-full max-w-6xl">
+      {/* Container for both image and form with responsive behavior */}
+      <div className="flex flex-col md:flex-row w-full max-w-6xl">
         {/* Image div */}
-        <div className="w-1/2 flex flex-col items-center justify-center">
+        <div className="md:w-1/2 w-full flex flex-col items-center justify-center p-4 md:p-8">
           <img
             src="/cuate.png"
-            className="rounded-lg w-full max-w-md h-auto"
+            className="rounded-lg w-full max-w-sm md:max-w-md h-auto"
             alt="login"
           />
         </div>
 
         {/* Form div */}
-        <div className="w-1/2 flex flex-col justify-center p-8">
+        <div className="md:w-1/2 w-full flex flex-col justify-center p-4 md:p-8">
           <form className="flex flex-col items-center w-full">
-            <div className="mb-10 text-center font-semibold text-orange-500 text-3xl">
+            <div className="mb-10 text-center font-semibold text-orange-500 text-2xl md:text-3xl">
               <h1>Welcome to Budget Expert</h1>
             </div>
             {/* Adjusted input width and spacing */}
-            <div className="mb-4 w-5/6">
+            <div className="mb-4 w-full md:w-5/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="email"
@@ -44,7 +44,7 @@ export default function Login() {
               />
             </div>
 
-            <div className="mb-6 w-5/6">
+            <div className="mb-6 w-full md:w-5/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="password"
@@ -68,11 +68,10 @@ export default function Login() {
                   Show Password
                 </label>
               </div>
-              {/* <p className="text-red-500 text-xs italic ">Forgot Password?</p> */}
             </div>
 
             {/* Button width adjusted to match the input fields */}
-            <div className="text-center border-b-2 pb-6 border-gray w-5/6">
+            <div className="text-center border-b-2 pb-6 border-gray w-full md:w-5/6">
               <button
                 className="bg-orange-500 hover:bg-black text-white font-bold py-2 px-6 w-full rounded focus:outline-none focus:shadow-outline"
                 type="button"
