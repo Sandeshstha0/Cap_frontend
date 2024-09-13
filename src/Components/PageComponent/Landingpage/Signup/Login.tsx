@@ -72,7 +72,7 @@ export default function Login() {
 
       <p className="mt-10 text-center text-primary  ">
         New to Budget?{' '}
-        <Link href="/" className="text-primary text-left hover:text-secondary font-bold">
+        <Link href="/signup" className="text-primary text-left hover:text-secondary font-bold">
           Create Account
         </Link>
       </p>
