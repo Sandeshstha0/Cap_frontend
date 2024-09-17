@@ -91,8 +91,7 @@ export default function Signup() {
             placeholder="************"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          {errorMessage && <p className="text-red-500 text-xs italic mt-1">{errorMessage}</p>}
+          />  
         </div>
 
       <div className="text-center border-b-2 pb-6 border-gray">
