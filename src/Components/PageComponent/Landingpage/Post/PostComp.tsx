@@ -95,9 +95,9 @@ export default function PostComp() {
                     {item.title}
                   </h1>
                   <h1 className='text-xl md:text-lg font-semibold mb-2 md:mb-2'>
-                        {item.title.length > 100 ? item.title.substring(0, 100) + '...' : item.title}
-                      </h1>
-                
+                    {item.title.length > 100 ? item.title.substring(0, 100) + '...' : item.title}
+                  </h1>
+
 
                 </div>
 
