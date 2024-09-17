@@ -11,6 +11,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white text-primary">
+      <div className='fixed -top-10 -right-16 rotate-45 w-24 md:w-32 h-24 md:h-32 bg-[#007296]'></div>
+      <div className='fixed top-8 -right-12 rotate-45 w-16 md:w-24 h-16 md:h-24 bg-orange-500'></div>
+      <div className='fixed -bottom-10 -left-16 rotate-45 w-24 md:w-32 h-24 md:h-32 bg-[#007296]'></div>
+      <div className='fixed bottom-8 -left-12 rotate-45 w-16 md:w-24 h-16 md:h-24 bg-orange-500'></div>
       {/* Container for both image and form with responsive behavior */}
       <div className="flex flex-col md:flex-row w-full max-w-6xl">
         {/* Image div */}
