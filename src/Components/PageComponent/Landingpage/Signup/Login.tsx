@@ -28,7 +28,7 @@ export default function Login() {
 
         {/* Form div */}
         <div className="md:w-1/2 w-full flex flex-col justify-center p-4 md:p-8">
-          <form className="flex flex-col items-center w-full">
+          <form  className="flex flex-col items-center w-full">
             <div className="mb-10 text-center font-semibold text-orange-500 text-2xl md:text-3xl">
               <h1>Welcome to Budget Expert</h1>
             </div>
