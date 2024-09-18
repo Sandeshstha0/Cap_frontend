@@ -1,10 +1,12 @@
 import UserLayout from '@/Components/globalComponent/User/Layouts/UserLayout'
 import React from 'react'
 
-export default function dashboard() {
+export default function index() {
   return (
     <UserLayout>
-    <div>dashboard</div>
+    <div>
+      Hello 
+    </div>
     </UserLayout>
   )
 }
