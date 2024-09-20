@@ -1,32 +1,32 @@
-import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout'
+import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
+import RejectModal from '@/Components/PageComponent/Adminpage/RejectModal';
+import { UserData } from '@/Data/UserData';
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { MdDelete } from "react-icons/md";
 
 export default function UserManagement() {
-   // Sample data for users
-   const [users, setUsers] = useState([
-    { Name: 'Sandesh Shrestha', Email: 'john.doe@example.com', Details: 'view users', status: 'Active' },
-   
-  ]);
 
-  // State for search term
+  // State for search term and modal
   const [searchTerm, setSearchTerm] = useState('');
+  const [rejectModalState, setRejectModalState] = useState(false);
 
-  // Filter users based on the search term
-  const filteredUsers = users.filter(user =>
-    user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.Email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Open modal function
+  const openRejectModal = () => {
+    setRejectModalState(true);
+  };
+
   return (
     <DefaultLayout>
-      {/* Page Heading */}
-      <div className='bg-white text-left text-primary font-bold px-4 text-2xl lg:px-6 py-6'>
-        User Management
-      </div>
-     
-      <div className="flex justify-between items-center mb-6">
-          <button className="inline-flex items-center justify-center gap-2 bg-gray-200 px-6 py-2 text-gray-700 font-medium rounded-lg shadow hover:bg-gray-300 transition">
+      <div className='bg-white'>
+        {/* Page Heading */}
+        <div className=' text-left text-primary font-semibold px-6 py-6 text-3xl'>
+          User Management
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="flex justify-between items-center mb-6 px-6">
+          <button className="inline-flex items-center justify-center gap-2  text-black px-6 py-2 text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition">
             <svg
               className="fill-current"
               width="20"
@@ -43,85 +43,97 @@ export default function UserManagement() {
             </svg>
             Filter
           </button>
-      <button className="absolute left-2 top-1/2 -translate-y-1/2 focus:outline-none">
-              <svg
-                className="fill-current text-gray-500 hover:text-blue-500"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                  fill="currentColor"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
+
+          <div className="relative">
             <input
               type="text"
               placeholder="Type to search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-100 border mt-20 border-gray-300  text-left bg-white rounded-lg pl-10 pr-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium"
+              className="border border-gray-300 pl-10 pr-4 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm w-64"
             />
+            <svg
+              className="absolute left-3 top-2.5 fill-current text-gray-500"
+              width="16"
+              height="16"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
+                fill="currentColor"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
+                fill="currentColor"
+              />
+            </svg>
           </div>
-      
-      {/* User Table */}
-      <div className="mb-1 w-full mt-1 bg-white px-6">
-        <div className="-mx-8 sm:-mx-10 px-4  sm:px-8 py-4 ">
-          <div className="inline-block min-w-full shadow-md ">
-            <table className="min-w-full ">
+        </div>
+
+        {/* User Table */}
+        <div className="mb-1 w-full mt-1 bg-white px-6">
+          <div className="overflow-x-auto">
+            <table className="min-w-full leading-normal">
               <thead>
                 <tr>
-                  <th className="px-5 py-3 border-b-2 border-gray bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Details
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {/* Row 1 */}
-                <tr>
-                  <td className="px-5 py-5 border-b border-gray bg-white text-sm">
-                    <p className="text-gray-900 whitespace-no-wrap">Sandesh Shrestha</p>
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray bg-white text-sm">
-                    <p className="text-gray-900 whitespace-no-wrap">sandesh@gmail.com</p>
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray bg-white text-sm">
-                  <Link href="/" className="text-primary hover:text-secondary font-bold">
-                  view users
-                  </Link>
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray bg-white text-sm">
-                    <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                      <span className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                      <span className="relative w-4 h-4"><MdDelete /></span>
-                    </span>
-                  </td>
-                </tr>
-                {/* Add more rows as needed */}
+                {UserData.filter((role: any) =>
+                  role.firstname.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map((user, index) => (
+                  <tr key={index}>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <p className="text-gray-900 whitespace-no-wrap">{user.firstname} {user.lastName}</p>
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <Link href={`/admin/manageuser/${user.id}`} className="text-blue-600 hover:underline">
+                        view Activity
+                      </Link>
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <button 
+                        onClick={openRejectModal}  // Open modal on click
+                        className="text-red-600 hover:text-red-800 transition"
+                      >
+                        <MdDelete size={20} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
+
+        {/* Reject Modal */}
+        {rejectModalState && (
+          <RejectModal
+            isOpen={rejectModalState}
+            closeModal={() => setRejectModalState(false)}
+          />
+        )}
       </div>
     </DefaultLayout>
-  )
+  );
 }
