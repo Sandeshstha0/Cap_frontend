@@ -77,8 +77,8 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Manage Expense",
-        route: "/user/manageExpense",
+        label: "Report",
+        route: "/user/managereport",
 
       },
       {
@@ -100,6 +100,7 @@ const menuGroups = [
         label: "Posts",
         route: "/admin/managepost",
       },
+      
 
       {
         icon: (
@@ -163,12 +164,12 @@ const menuGroups = [
             </defs>
           </svg>
         ),
-        label: "Content Management",
+        label: "Transaction",
         route: "#",
         children: [
-          { label: "Home", route: "/helpAndSupport/report" },
-          { label: "About", route: "/helpAndSupport/history" },
-          { label: "Contactus", route: "/helpAndSupport/contactus" },
+          { label: "Income", route: "/helpAndSupport/report" },
+          { label: "Expense", route: "/helpAndSupport/history" },
+        
         ],
       },
     ],
