@@ -2,13 +2,17 @@
 import Button from '@/Components/Button';
 import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
 import Layout from '@/Components/globalComponent/Landingpage/MainLayout';
+import DeleteModal from '@/Components/PageComponent/Adminpage/DeleteModal';
 import { UserData } from '@/Data/UserData';
 import Image from 'next/image';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const UserDescription = () => {
+    const [deleteModalState, setDeleteModalState] = useState(false);
+    const [selectedPostId, setSelectedPostId] = useState(null);
     const router = useRouter();
     const { id } = router.query;
 
@@ -23,6 +27,11 @@ const UserDescription = () => {
     }
     const handleClick = () => {
 
+    };
+    // Open delete modal and pass post ID
+    const openDeleteModal = (id: any) => {
+        setSelectedPostId(id);
+        setDeleteModalState(true);
     };
 
     return (
@@ -112,7 +121,7 @@ const UserDescription = () => {
 
                                         {/* Action Button at Bottom Right */}
                                         <div className="text-right mt-auto">
-                                            <Button label="Delete" onClick={() => handleClick()} variant="primary" />
+                                        <Button label="Delete" onClick={() => openDeleteModal(item.id)} variant="primary" />
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +130,15 @@ const UserDescription = () => {
                         </div>
 
                     </div>
+                    {/* Delete Modal */}
+                    {deleteModalState && (
+                        <DeleteModal
+                            isOpen={deleteModalState}
+                            closeModal={() => setDeleteModalState(false)}
+
+                        />
+                    )}
+
                 </div>
             </div>
 

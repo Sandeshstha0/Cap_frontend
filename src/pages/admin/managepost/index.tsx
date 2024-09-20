@@ -3,17 +3,32 @@ import Button from '@/Components/Button';
 import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
 import { PostData } from '@/Data/Data';
 import Image from 'next/image';
+import Link from 'next/link';
+import DeleteModal from '@/Components/PageComponent/Adminpage/DeleteModal';
 
 export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   useEffect(() => {
-    setMounted(true); // This ensures the UI is rendered only after the component has mounted on the client side
+    setMounted(true); // Ensures the UI is rendered only after the component has mounted on the client side
   }, []);
 
-  const handleClick = (id: any) => {
-    console.log(`Delete post with id: ${id}`);
+  // Open delete modal and pass post ID
+  const openDeleteModal = (id: any) => {
+    setSelectedPostId(id);
+    setDeleteModalState(true);
+  };
+
+  // const handleDeleteClick = () => {
+  //   console.log(`Delete post with id: ${selectedPostId}`);
+  //   // Add your delete logic here
+  //   setDeleteModalState(false); // Close modal after deleting
+  // };
+  const handleClick = () => {
+   
   };
 
   // If not mounted yet, return null to avoid SSR/CSR mismatch
@@ -23,7 +38,8 @@ export default function Index() {
     <DefaultLayout>
       <div className="bg-white p-6">
 
-        <h1 className='p-4 text-2xl font-semibold'>Use Posts</h1>
+        <h1 className="p-4 text-2xl font-semibold">User Posts</h1>
+
         {/* Header with Filter and Search */}
         <div className="flex justify-between items-center mb-6">
           <button className="inline-flex items-center justify-center gap-2 bg-gray-200 px-6 py-2 text-gray-700 font-medium rounded-lg shadow hover:bg-gray-300 transition">
@@ -112,14 +128,26 @@ export default function Index() {
                 </div>
 
                 {/* Action Button at Bottom Right */}
-                <div className="text-right mt-auto">
-                  <Button label="Delete" onClick={() => handleClick(item.id)} variant="primary" />
+                <div className="text-right mt-auto space-x-2">
+                  <Link href={`/admin/managepost/${item.slug}`}>
+                    <Button label="View" onClick={handleClick} variant="primary" />
+                  </Link>
+                  <Button label="Delete" onClick={() => openDeleteModal(item.id)} variant="primary" />
                 </div>
               </div>
             </div>
 
           ))}
         </div>
+
+        {/* Delete Modal */}
+        {deleteModalState && (
+          <DeleteModal
+            isOpen={deleteModalState}
+            closeModal={() => setDeleteModalState(false)}
+         
+          />
+        )}
       </div>
     </DefaultLayout>
   );
