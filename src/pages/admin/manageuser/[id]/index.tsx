@@ -6,7 +6,7 @@ import DeleteModal from '@/Components/PageComponent/Adminpage/DeleteModal';
 import { UserData } from '@/Data/UserData';
 import Image from 'next/image';
 
-import Link from 'next/link';
+
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
