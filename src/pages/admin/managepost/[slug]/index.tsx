@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Button from '@/Components/Button';
 import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
-import Layout from '@/Components/globalComponent/Landingpage/MainLayout';
 import DeleteModal from '@/Components/PageComponent/Adminpage/DeleteModal';
 import { PostData } from '@/Data/Data';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
