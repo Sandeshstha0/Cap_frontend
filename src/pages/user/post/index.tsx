@@ -8,7 +8,7 @@ export default function index() {
       <div>
         {/* Page Heading */}
         <div className="bg-white text-left text-primary font-normal  px-15 py-6 ">
-          <b>Hello, Sachina!</b>
+          <b>Hello, Sandesh!</b>
           <p>
             Welcome to the Budget Expert, here we manage you daily Expense and
             Projects
