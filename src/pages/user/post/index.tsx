@@ -30,7 +30,7 @@ export default function Index() {
           </button>
 
           {/* Search Bar */}
-          <div className="relative flex items-center w-full max-w-md">
+          <div className="relative flex items-center w-full  max-w-md">
             <button className="absolute left-2 top-1/2 -translate-y-1/2 focus:outline-none">
               <svg
                 className="fill-current text-gray-500 hover:text-blue-500"
