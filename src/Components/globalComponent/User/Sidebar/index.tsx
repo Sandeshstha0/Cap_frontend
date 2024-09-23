@@ -98,7 +98,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Posts",
-        route: "/admin/managepost",
+        route: "/user/post",
       },
       
 
