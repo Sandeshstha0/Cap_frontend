@@ -64,17 +64,17 @@ export default function Index() {
         </div>
 
         {/* Input Section */}
-        <div className="bg-gray-50 px-6 py-3 mt-2 mb-6">
+        <div className="bg-gray-50 px-2 lg:px-6  py-3 mt-2 mb-6">
           <div className=" rounded-lg mt-5">
-          {PostData?.filter((role: any) =>
-            role.title.toLowerCase().includes(searchTerm.toLowerCase())
-          ).map((post, index) => (
+            {PostData?.filter((role: any) =>
+              role.title.toLowerCase().includes(searchTerm.toLowerCase())
+            ).map((post, index) => (
               <div
                 key={index}
-                className="flex bg-white shadow-lg space-x-4 p-6 flex-col lg:flex-row justify-between items-start mb-5 space-y-4"
+                className="flex flex-col lg:flex-row bg-white shadow-lg space-y-4 lg:space-y-0 lg:space-x-4 p-6 justify-between items-start mb-5"
               >
                 {/* Blog Content */}
-                <div className="lg:w-2/3 flex flex-col justify-between">
+                <div className="w-full lg:w-2/3 flex flex-col justify-between">
                   <div>
                     <h2 className="text-2xl text-black font-bold mb-2">
                       {post.title}
@@ -92,21 +92,23 @@ export default function Index() {
                       <p className="ml-4 text-black mt-6">{post.time}</p>
                     </div>
                   </div>
-                  <div className="flex justify-start mt-auto">
+                  <div className="flex justify-start mt-6 lg:mt-">
                     <Link href={`/user/post/${post.slug}`}>
-                      <button className="bg-orange-500 text-white mt-8 px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+                      <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
                         Read More
                       </button>
                     </Link>
                   </div>
                 </div>
-                <div className="lg:w-1/3 mt-6 lg:mt-0">
+
+                {/* Blog Image */}
+                <div className="w-full lg:w-1/3 mt-6 lg:mt-0">
                   <Image
                     src={post.image}
                     alt={post.title}
                     width={500}
                     height={300}
-                    className="rounded-lg"
+                    className="rounded-lg w-full h-auto object-cover"
                   />
                 </div>
               </div>
