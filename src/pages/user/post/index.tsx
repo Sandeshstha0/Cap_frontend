@@ -1,4 +1,5 @@
 import DefaultLayout from "@/Components/globalComponent/Admin/Layouts/DefaultLayout";
+import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import { PostData } from "@/Data/Data";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +7,7 @@ import React from "react";
 
 export default function Index() {
   return (
-    <DefaultLayout>
+ <UserLayout>
       {/* Main Content */}
       <div className="bg-gray-50 px-10 py-3 mt-2 mb-6">
         <div className="w-full h-24 rounded-lg flex space-x-5 items-center">
@@ -105,6 +106,6 @@ export default function Index() {
           ))}
         </div>
       </div>
-    </DefaultLayout>
+      </UserLayout>
   );
 }
