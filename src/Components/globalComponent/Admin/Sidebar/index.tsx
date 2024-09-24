@@ -185,8 +185,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white duration-300 ease-linear lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0 drop-shadow-2xl" : "-translate-x-full"
           }`}
       >
-        {/* <!-- SIDEBAR HEADER --> */}
-        <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-1">
+
+                {/* <!-- SIDEBAR HEADER --> */}
+                <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-1">
           {/* <Link href="/">
             <Image
               width={176}
@@ -217,6 +218,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </svg>
           </button>
         </div>
+     
         {/* <!-- SIDEBAR HEADER --> */}
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
