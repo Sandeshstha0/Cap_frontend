@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@/Components/Button';
+
 import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
 import { PostData } from '@/Data/Data';
 import Image from 'next/image';
 import Link from 'next/link';
 import DeleteModal from '@/Components/PageComponent/Adminpage/DeleteModal';
+import Button from '@/Components/Button';
 
 export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,11 +23,7 @@ export default function Index() {
     setDeleteModalState(true);
   };
 
-  // const handleDeleteClick = () => {
-  //   console.log(`Delete post with id: ${selectedPostId}`);
-  //   // Add your delete logic here
-  //   setDeleteModalState(false); // Close modal after deleting
-  // };
+ 
   const handleClick = () => {
    
   };
