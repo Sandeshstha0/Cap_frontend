@@ -123,7 +123,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Profile",
-        route: "/profile",
+        route: "/user/profile",
       },
 
     ],
