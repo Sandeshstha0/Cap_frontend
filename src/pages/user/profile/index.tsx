@@ -1,13 +1,19 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
-import React from "react";
+import EditModal from "@/Components/PageComponent/UserPage/Profile/EditModal";
+import React, { useState } from "react";
 
 export default function Profile() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [editmodalState, seteditModalState] = useState(false);
+
+  // Open edit modal
+  const openEditModal = () => {
+    seteditModalState(true);
+    
+  };
+
   return (
     <UserLayout>
-   
-       
-      
-
       {/* Main Content */}
       <div className="flex-1 p-0 bg-gray-50">
         {/* Profile Section */}
@@ -25,21 +31,21 @@ export default function Profile() {
                 alt="User Avatar"
                 className="w-35 h-32 rounded-full shadow-md mb-4"
               />
-              <button className="bg-primary text-l text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+              <button className="bg-primary text-l text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 onClick={openEditModal}">
                 Edit Profile Picture
               </button>
             </div>
 
             {/* User Info */}
             <div className="flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-9 text-l font-nomal">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-9 text-l font-normal">
                 {/* Full Name */}
                 <div>
-                  <label className="text-bodydark2 ext-medium font-normal">Full Name</label>
+                  <label className="text-bodydark2 text-medium font-normal">Full Name</label>
                   <input
                     type="text"
                     value="Sandesh Shrestha"
-                    className="w-full px-2 py-2 text-bodydark2  text-sm border border-gray-300 rounded-lg mt-2"
+                    className="w-full px-2 py-2 text-bodydark2 text-sm border border-gray-300 rounded-lg mt-2"
                     disabled
                   />
                 </div>
@@ -50,7 +56,7 @@ export default function Profile() {
                   <input
                     type="email"
                     value="sandesh@123gmail.com"
-                    className="w-full px-2 py-2 text-bodydark2  text-sm  border border-gray-300 rounded-lg mt-2"
+                    className="w-full px-2 py-2 text-bodydark2 text-sm border border-gray-300 rounded-lg mt-2"
                     disabled
                   />
                 </div>
@@ -61,7 +67,7 @@ export default function Profile() {
                   <input
                     type="text"
                     value="9812190256"
-                    className="w-full px-2 py-2 text-sm  text-bodydark2 border border-gray-300 rounded-lg mt-2"
+                    className="w-full px-2 py-2 text-sm text-bodydark2 border border-gray-300 rounded-lg mt-2"
                     disabled
                   />
                 </div>
@@ -100,15 +106,24 @@ export default function Profile() {
               </div>
 
               <div className="mt-6 flex justify-end">
-                <button className="bg-secondary text-black  text-2xl font-semibold px-6 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+                <button className="bg-secondary text-black text-2xl font-semibold px-6 py-2 rounded-lg hover:bg-orange-600 transition duration-300" onClick={openEditModal}>
                   Edit Profile
                 </button>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Edit Modal */}
+        {editmodalState && (
+          <EditModal
+            isOpen={editmodalState}
+            closeModal={() => seteditModalState(false)}
+
+         
+          />
+        )}
       </div>
-    
     </UserLayout>
   );
 }
