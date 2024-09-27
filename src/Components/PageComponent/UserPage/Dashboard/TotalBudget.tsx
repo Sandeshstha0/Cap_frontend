@@ -4,7 +4,7 @@ import React from "react";
 export default function TotalBudget() {
   return (
     <div>
-      <div className="bg-white text-center mt-10 py-10">
+      <div className="bg-white rounded-lg text-center mt-10 py-10">
         <div className="container rounded-md flex flex-col items-center gap-4">
           <div
             className="font-bold text-6xl sm:text-8xl mt-6"
@@ -14,9 +14,7 @@ export default function TotalBudget() {
           </div>
           <p className="font-bold text-xl sm:text-2xl">Your current Budget</p>
         </div>
-        {/* Main Budget */}
-        {/* <div className="text-5xl font-bold text-gray-800">25000</div>
-      <div className="text-xl text-gray-600 mt-2">Your current Budget</div> */}
+     
 
         <div className="flex flex-col md:flex-row justify-between md:space-x-12 space-y-6 md:space-y-0 px-4 md:px-12 mt-10">
           {/* Card 1: Total Income */}

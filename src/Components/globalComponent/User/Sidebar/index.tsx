@@ -78,7 +78,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Report",
-        route: "/user/managereport",
+        route: "/user/report",
 
       },
       {
