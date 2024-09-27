@@ -167,8 +167,8 @@ const menuGroups = [
         label: "Transaction",
         route: "#",
         children: [
-          { label: "Income", route: "/helpAndSupport/report" },
-          { label: "Expense", route: "/helpAndSupport/history" },
+          { label: "Income", route: "/user/transaction/income" },
+          { label: "Expense", route: "/user/transaction/expense" },
         
         ],
       },
