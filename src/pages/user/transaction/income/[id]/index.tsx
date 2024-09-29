@@ -13,6 +13,10 @@ export default function Index() {
         <UserLayout>
 
     <div>
+
+      <div>
+        <h1>{income?.category}</h1>
+      </div>
        {/* Table Section */}
        <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
             <table className="min-w-full divide-y divide-gray-200 rounded-lg">
