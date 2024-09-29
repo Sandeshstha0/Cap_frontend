@@ -1,9 +1,14 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import EditIncomeCategoryModalProps from "@/Components/PageComponent/UserPage/Transactions/IncomeCategoryModal";
+import { PostData } from "@/Data/Data";
+import { Incomedata } from "@/Data/Income";
+import Item from "antd/es/list/Item";
+import Link from "next/link";
 import React, { useState } from "react";
 
 export default function Index() {
   const [editmodalState, seteditModalState] = useState(false);
+  const[searchTerm, setSearchTerm]=useState('');
 
   // Open edit modal
   const openEditModal = () => {
@@ -19,8 +24,8 @@ export default function Index() {
        {/* Main Content */}
        <div className="flex-grow bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg">
-          {/* Total Expense */}
-          <h2 className="text-xl font-bold mb-4">Total Expense this month</h2>
+          {/* Total Incoome*/}
+          <h2 className="text-xl font-bold mb-4">Total income this month</h2>
           <p className="text-4xl font-bold text-gray-700 mb-6">17000</p>
           </div>
 
@@ -43,9 +48,11 @@ export default function Index() {
 
             {/* Search Bar */}
             <div className="flex justify-between space-x-3 mt-4 items-center px-2 mb-4">
-              <input
+              <input 
                 type="text"
                 placeholder="Search"
+                value={searchTerm}
+                onChange={(e)=> setSearchTerm(e.target.value)}
                 className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
               />
             </div>
@@ -63,7 +70,7 @@ export default function Index() {
                     scope="col"
                     className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                   >
-                   Category
+                  Category
                   </th>
                   <th
                     scope="col"
@@ -87,12 +94,20 @@ export default function Index() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
+                
+                {Incomedata.filter((role:any)=>role.category.toLowerCase().includes(searchTerm.toLowerCase())).map((item,index)=>(
+
+               
+                <tr key={index}>
                   
                 
-                  <td className="px-6 py-4 whitespace-nowrap">Teaching</td>
-                  <td className="px-6 py-4 whitespace-nowrap">12</td>
-                  <td className="px-6 py-4 whitespace-nowrap">12000</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                  <Link href={`/user/transaction/income/${item.id}`}>
+                    {item.category}
+                    </Link>
+                    </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.transaction.length}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
                   
                   
                  
@@ -105,6 +120,7 @@ export default function Index() {
                     </button>
                   </td>
                 </tr>
+                 ))}
               </tbody>
             </table>
         </div>
