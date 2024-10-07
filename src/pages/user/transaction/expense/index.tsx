@@ -1,17 +1,26 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import EditCategoryModal from "@/Components/PageComponent/UserPage/Transactions/ExpenseCategoryModal";
+import { ExpenseData } from "@/Data/Expense";
+
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Expense() {
   const [editmodalState, seteditModalState] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
   // Open edit modal
   const openEditModal = () => {
     seteditModalState(true);
   };
 
   const [transactions] = useState([
-    { category: "Food", transactions: 20, amount: 8000 },
+    {
+      category: "Groceries",
+      amount: 12000,
+      date: "7th, June",
+      remark: "Brought groceries of the week",
+    },
   ]);
 
   return (
@@ -46,6 +55,8 @@ export default function Expense() {
                   <input
                     type="text"
                     placeholder="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
                   />
                 </div>
@@ -65,19 +76,7 @@ export default function Expense() {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
-                      Id
-                    </th>
-                    <th
-                      scope="col"
                       className="px-6 py-3 text-left text-l font-medium text-black  tracking-wider"
-                    >
-                      Amount
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                     >
                       Category
                     </th>
@@ -85,9 +84,8 @@ export default function Expense() {
                       scope="col"
                       className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                     >
-                      Remark
+                      Amount
                     </th>
-
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
@@ -99,27 +97,51 @@ export default function Expense() {
                       scope="col"
                       className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                     >
+                      Remark
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
+                    >
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">01</td>
-                    <td className="px-6 py-4 whitespace-nowrap">12000</td>
-                    <td className="px-6 py-4 whitespace-nowrap">Teaching</td>
-                    <td className="px-6 py-4 whitespace-nowrap">Got salary</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7th july</td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="text-blue-600 hover:text-blue-900 mr-2">
-                        Edit
-                      </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                  {ExpenseData.filter((role: any) =>
+                    role.category
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  ).map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link href={`/user/transaction/expense/${item.id}`}>
+                          {item.category}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {item.category}
+                        </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {item.amount}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {item.date}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {item.remark}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button className="text-blue-600  hover:text-blue-900 mr-2">
+                          Edit
+                        </button>
+                        <button className="text-red-600 hover:text-red-900">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
