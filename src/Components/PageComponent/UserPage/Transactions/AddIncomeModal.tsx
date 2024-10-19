@@ -6,12 +6,12 @@ import {
   SecondaryOutlineButton,
 } from "../../Buttons/Buttons";
 
-interface EditCategoryModalProps {
+interface NewIncomeModalProps {
   isOpen: boolean;
   closeModal: () => void;
 }
 
-const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
+const NewIncomeModalProps: React.FC<NewIncomeModalProps> = ({
   isOpen,
   closeModal,
 }) => {
@@ -29,7 +29,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         <div className="flex flex-col items-center space-x-2 space-y-2">
           {/* Modal Heading */}
           <h2 className="text-3xl text-center font-bold mb-2 text-black">
-            Add New Expense
+            Add New 
           </h2>
 
           {/* Description */}
@@ -44,19 +44,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
                 />
               </div>
 
-              {/*Category*/}
-
-              <div>
-                <label className="text-black text-xl  font-medium">
-                  Category
-                </label>
-                <select className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark">
-                  <option value="">Select Category</option>
-                  <option value="">Teaching</option>
-                  <option value="Freelancing">Freelancing</option>
-                  <option value="Doctor">Doctor</option>
-                </select>
-              </div>
+              
 
               {/* Other Info */}
               <div>
@@ -67,29 +55,31 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
                 />
               </div>
               <div>
-                <label className="text-black text-xl font-medium">
-                  Description{" "}
-                </label>
-                <textarea
-                  className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
-                  rows={5}
-                ></textarea>
+              <label className="text-black text-xl font-medium">Description </label>
+              <textarea
+              
+                className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
+                rows={5}
+              ></textarea>
+            </div>
+
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-center space-x-10 w-100 mt-6">
-          <div onClick={closeModal}>
-            <SecondaryOutlineButton title={"Cancel"} />
+          {/* Action Buttons */}
+          <div className="flex justify-center space-x-10 w-100 mt-6">
+            <div onClick={closeModal}>
+              <SecondaryOutlineButton title={"Cancel"} />
+            </div>
+
+            <SecondaryOutlineButton title={"Save"} />
           </div>
-
-          <SecondaryOutlineButton title={"Save"} />
         </div>
-      </div>
+      
+
     </Modal>
   );
 };
 
-export default EditCategoryModal;
+export default NewIncomeModalProps;

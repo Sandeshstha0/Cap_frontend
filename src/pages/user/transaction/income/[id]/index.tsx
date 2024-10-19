@@ -1,22 +1,25 @@
 import UserLayout from '@/Components/globalComponent/User/Layouts/UserLayout';
+import NewIncomeModalProps from '@/Components/PageComponent/UserPage/Transactions/AddIncomeModal';
 import { Incomedata } from '@/Data/Income';
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 export default function Index() {
+  const[editmodalState, seteditModalState]=useState(false);
+  
     const router=useRouter();
     const {id}= router.query;
     const[searchTerm, setSearchTerm]=useState('');
+    //Open edit modal//
+    const openEditModal=()=>{
+      seteditModalState(true);
+    }
 
     const income= Incomedata.find((p)=>p.id===parseInt(id as string));
       return (
         <UserLayout>
 
     <div>
-
-      <div>
-        <h1>{income?.category}</h1>
-      </div>
        {/* Table Section */}
        <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
             <table className="min-w-full divide-y divide-gray-200 rounded-lg">
@@ -32,19 +35,25 @@ export default function Index() {
                     scope="col"
                     className="px-6 py-3 text-left text-l font-medium text-black  tracking-wider"
                   >
-                   Transaction
+                  Amount
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                   >
-                   Amount
+                  Date
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
                   >
-                  Action
+                 Description
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
+                  >
+                Action
                   </th>
                  
                 </tr>
@@ -60,6 +69,7 @@ export default function Index() {
                   <td className="px-6 py-4 whitespace-nowrap">
                  
                     </td>
+                   
                   <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.description}</td>
@@ -78,8 +88,14 @@ export default function Index() {
                  ))}
               </tbody>
             </table>
+            {editmodalState && (
+          <NewIncomeModalProps
+            isOpen={editmodalState}
+            closeModal={() => seteditModalState(false)}
+            />
+          )}
     </div>
-    </div>
+        </div>
     </UserLayout>
-  )
+  );
 }
