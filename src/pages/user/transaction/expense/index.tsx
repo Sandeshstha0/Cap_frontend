@@ -115,14 +115,14 @@ export default function Expense() {
                       .includes(searchTerm.toLowerCase())
                   ).map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap hover:text-blue-600 hover:font-semibold transition-colors duration-300">
                         <Link href={`/user/transaction/expense/${item.id}`}>
                           {item.category}
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {item.category}
-                        </td>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {item.amount}
                       </td>
