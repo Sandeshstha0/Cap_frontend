@@ -1,19 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
-import Button from '@/Components/Button'
-import { PostData } from '@/Data/Data'
-import Link from 'next/link'
-import React, { useState } from 'react'
-import { IoIosPerson } from 'react-icons/io'
+import Button from "@/Components/Button";
+import { PostData } from "@/Data/Data";
+import Link from "next/link";
+import React, { useState } from "react";
+import { IoIosPerson } from "react-icons/io";
+import { motion } from "framer-motion"; // Import motion
+import { slideInVariants, staggerContainer } from "@/utils/motion"; // Adjust the path accordingly
 
 export default function PostComp() {
   const [searchTerm, setSearchTerm] = useState("");
-  const handleClick = () => {
-  };
+
   return (
-    <div className='bg-white mt-12'>
-      <div className='text-black mt-24 px-8 py-4 bg-gray-50 rounded-lg shadow-lg'>
-        <div className='flex justify-between items-center'>
-          <div className='flex items-center space-x-4'>
+    <motion.div
+      className="bg-slate-100"
+      variants={staggerContainer(0.1, 0.1)} // Use your stagger container variant
+      initial="hidden"
+      animate="show"
+    >
+      <div className="text-black bg-white px-8 py-4 bg-gray-50 rounded-lg shadow-lg">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4">
             <button className="inline-flex items-center justify-center gap-2 bg-gray-200 px-6 py-2 text-gray-700 font-medium rounded-lg shadow hover:bg-gray-300 transition">
               <svg
                 className="fill-current"
@@ -66,65 +72,54 @@ export default function PostComp() {
               className="w-full border border-gray-300 bg-white rounded-lg pl-10 pr-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium"
             />
           </div>
-
-          {/* Filter Button */}
-
         </div>
       </div>
 
-
-
-      {PostData?.filter((role: any) =>
-        role.title.toLowerCase().includes(searchTerm.toLowerCase())
-      ).map((item, index) => (
-        <div key={index} className='flex bg-white items-center justify-center mt-12'> {/* This div centers content */}
-          <div className='w-full max-w-5xl  rounded-lg shadow-lg'>
-            <div className='flex flex-col-reverse md:flex-row space-x-4 lg:items-center'>
-
-              <div className='flex items-center justify-center '>
-                <img src={item.image} className='object-cover w-65 h-70  rounded-lg  ' alt='Background' />
-              </div>
-
-              {/* Left Column */}
-              <div className='flex flex-col w-full md:w-2/3 px-4 p-4'>
-                <div className='border-b border-gray-300 pb-4'>
-                  <p className='text-sm md:text-base font-medium mb-2 md:mb-4'>
-                    {item.time}
-                  </p>
-                  <h1 className='text-xl md:text-3xl font-bold mb-2 md:mb-4'>
-                    {item.title}
-                  </h1>
-                  <h1 className='text-xl md:text-lg font-semibold mb-2 md:mb-2'>
-                    {item.title.length > 100 ? item.title.substring(0, 100) + '...' : item.title}
-                  </h1>
-
-
-                </div>
-
-                <div className='flex flex-col gap-y-2 md:gap-y-4 pt-4'>
-                  <span className='flex items-center gap-x-2'>
-                    <IoIosPerson />
-                    Author:  {item.author}
-                  </span>
-
-                </div>
-
-                <Link href={`/posts/${item.slug}`}>
-
-                  <div className='text-right p-4' >
-                    <Button label="Read" onClick={handleClick} variant="secondary" />
+      <section className="pt-12 text-black pb-10 lg:pt-[40px] lg:pb-20">
+        <div className="container mx-auto">
+          <motion.div className="-mx-4 flex flex-wrap" variants={staggerContainer(0.4, 0.4)} initial="hidden" animate="show">
+            {PostData?.filter((post) =>
+              post.title.toLowerCase().includes(searchTerm.toLowerCase())
+            ).map((post) => (
+              <motion.div
+                key={post.id}
+                className="w-full px-4 md:w-1/2 lg:w-1/3"
+                variants={slideInVariants} // Use your slide-in variants
+              >
+                <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
+                  <div className="mb-8">
+                    <img src={post.image} alt={post.title} className="w-full" />
                   </div>
-
-                </Link>
-              </div>
-
-              {/* Right Column */}
-
-            </div>
-          </div>
+                  <div className="p-6">
+                    <span className="bg-primary mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                      {post.time}
+                    </span>
+                    <h3>
+                      <a
+                        href="javascript:void(0)"
+                        className="text-dark hover:text-primary mb-4 inline-block text-xl font-semibold sm:text-2xl lg:text-xl xl:text-2xl"
+                      >
+                        {post.title}
+                      </a>
+                    </h3>
+                    <p className="text-body-color text-base">
+                      {post.detail.length > 100
+                        ? post.detail.substring(0, 100) + "..."
+                        : post.detail}
+                    </p>
+                    <a
+                      href={`/posts/${post.slug}`} // Assuming you have a dynamic route for each post
+                      className="mt-4 inline-block rounded bg-primary py-2 px-4 text-white font-semibold hover:bg-opacity-90"
+                    >
+                      Read More
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      ))}
-
-    </div>
-  )
+      </section>
+    </motion.div>
+  );
 }

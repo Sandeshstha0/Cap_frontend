@@ -1,15 +1,25 @@
 import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
 import RejectModal from '@/Components/PageComponent/Adminpage/RejectModal';
-import { UserData } from '@/Data/UserData';
+import useFetchProtectedData from '@/hooks/useFetchProtectedData';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { MdDelete } from "react-icons/md";
+import { MdDelete } from 'react-icons/md';
 
-export default function UserManagement() {
+interface User {
+  id: string;
+  firstname: string;
+  lastName: string;
+  email: string;
+}
+
+const UserManagement: React.FC = () => {
+  const { data: protectedData, error: apiError, refetchData } = useFetchProtectedData<User[]>('/admin/users');
+
+ 
 
   // State for search term and modal
-  const [searchTerm, setSearchTerm] = useState('');
-  const [rejectModalState, setRejectModalState] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [rejectModalState, setRejectModalState] = useState<boolean>(false);
 
   // Open modal function
   const openRejectModal = () => {
@@ -18,15 +28,15 @@ export default function UserManagement() {
 
   return (
     <DefaultLayout>
-      <div className='bg-white'>
+      <div className="bg-white">
         {/* Page Heading */}
-        <div className=' text-left text-primary font-semibold px-6 py-6 text-3xl'>
+        <div className="text-left text-primary font-semibold px-6 py-6 text-3xl">
           User Management
         </div>
 
         {/* Search and Filter Section */}
         <div className="flex justify-between items-center mb-6 px-6">
-          <button className="inline-flex items-center justify-center gap-2  text-black px-6 py-2 text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition">
+          <button className="inline-flex items-center justify-center gap-2 text-black px-6 py-2 text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition">
             <svg
               className="fill-current"
               width="20"
@@ -96,26 +106,25 @@ export default function UserManagement() {
                 </tr>
               </thead>
               <tbody>
-                {UserData.filter((role: any) =>
-                  role.firstname.toLowerCase().includes(searchTerm.toLowerCase())
-                ).map((user, index) => (
-                  <tr key={index}>
+                {protectedData?.filter((user: User) => 
+                  user.firstname.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map((user: User, index: number) => (
+                  <tr key={user.id}> {/* Use user.id as the key for better performance */}
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">{user.firstname} {user.lastName}</p>
+                      <p className="text-gray-900 whitespace-no-wrap">
+                        {user.firstname} {user.lastName}
+                      </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <Link href={`/admin/manageuser/${user.id}`} className="text-blue-600 hover:underline">
-                        view Activity
+                        View Activity
                       </Link>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <button 
-                        onClick={openRejectModal}  // Open modal on click
-                        className="text-red-600 hover:text-red-800 transition"
-                      >
+                      <button onClick={openRejectModal} className="text-red-600 hover:text-red-800 transition">
                         <MdDelete size={20} />
                       </button>
                     </td>
@@ -128,12 +137,11 @@ export default function UserManagement() {
 
         {/* Reject Modal */}
         {rejectModalState && (
-          <RejectModal
-            isOpen={rejectModalState}
-            closeModal={() => setRejectModalState(false)}
-          />
+          <RejectModal isOpen={rejectModalState} closeModal={() => setRejectModalState(false)} />
         )}
       </div>
     </DefaultLayout>
   );
-}
+};
+
+export default UserManagement;

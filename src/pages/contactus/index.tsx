@@ -3,6 +3,8 @@ import { useState } from "react";
 import Layout from "@/Components/globalComponent/Landingpage/MainLayout";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { motion } from "framer-motion"; // Import motion
+import { fadeIn } from "@/utils/motion";// Adjust the import path accordingly
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -73,9 +75,14 @@ export default function ContactForm() {
   return (
     <Layout>
       {/* Main Container */}
-      <div className="flex flex-col mt-16 md:flex-row justify-between items-center bg-white px-6 md:px-16 py-10 gap-8">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-white px-6 md:px-16 py-10 gap-8">
         {/* Contact Form Section */}
-        <div className="w-full md:w-2/5">
+        <motion.div
+          className="w-full md:w-2/5"
+          variants={fadeIn('up', 'tween', 0.2, 0.6)} // Animation variant
+          initial="hidden"
+          animate="show"
+        >
           <h2 className="text-4xl font-bold text-black text-center mb-8">
             Contact Us
           </h2>
@@ -138,16 +145,21 @@ export default function ContactForm() {
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
 
         {/* Image Section */}
-        <div className="w-full md:w-1/2 flex flex-col items-center space-y-8">
+        <motion.div
+          className="w-full md:w-1/2 flex flex-col items-center space-y-8"
+          variants={fadeIn('up', 'tween', 0.4, 0.6)} // Animation variant
+          initial="hidden"
+          animate="show"
+        >
           <img
             src="/16.png"
             className="rounded-lg w-full max-w-md h-auto"
             alt="Contact Us"
           />
-        </div>
+        </motion.div>
       </div>
     </Layout>
   );
