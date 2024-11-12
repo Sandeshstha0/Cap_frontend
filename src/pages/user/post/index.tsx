@@ -2,13 +2,45 @@
 import Button from "@/Components/Button";
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import { PostData } from "@/Data/Data";
+import { getPost } from "@/service/landingService";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface Post {
+  id: number;
+  title: string;
+  description: string;
+  imageType: string; // This represents the type of the image
+  imageData: string; // Assuming this is a base64 encoded string
+  createdAt: string; // Add the createdAt field if it's part of your response
+  slug: string; // Add the slug field if it's part of your response
+}
 
 export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState<{ data: Post[] }>({ data: [] }); // Adjust the initial state
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPost();
+        setPosts(data); 
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      }
+    };
 
+    fetchPosts();
+  }, []);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!posts.data || posts.data.length === 0) {
+    return <div>No posts available</div>; // Handle the case when there are no posts
+  }
   const handleClick = () => {};
 
   return (
@@ -76,7 +108,7 @@ export default function Index() {
         {/* Input Section */}
         <div className="bg-gray-50 px-2 lg:px-6  py-3 mt-2 mb-6">
           <div className=" rounded-lg mt-5">
-            {PostData?.filter((role: any) =>
+            {posts?.data?.filter((role: any) =>
               role.title.toLowerCase().includes(searchTerm.toLowerCase())
             ).map((post, index) => (
               <div
@@ -93,13 +125,13 @@ export default function Index() {
                       className="text-gray-500 font-normal mt-4"
                       dangerouslySetInnerHTML={{
                         __html:
-                          post.detail.length > 150
-                            ? `${post.detail.substring(0, 150)}...`
-                            : post.detail,
+                          post.description.length > 150
+                            ? `${post.description.substring(0, 150)}...`
+                            : post.description,
                       }}
                     />
                     <div className="flex items-center mb-2">
-                      <p className="ml-4 text-black mt-6">{post.time}</p>
+                      <p className="ml-4 text-black mt-6">{post.createdAt}</p>
                     </div>
                   </div>
                   <div className="flex justify-start mt-6 lg:mt-">
@@ -114,7 +146,7 @@ export default function Index() {
                 {/* Blog Image */}
                 <div className="w-full lg:w-1/3 mt-6 lg:mt-0">
                   <Image
-                    src={post.image}
+                    src={`data:${post.imageType};base64,${post.imageData}`}
                     alt={post.title}
                     width={500}
                     height={300}

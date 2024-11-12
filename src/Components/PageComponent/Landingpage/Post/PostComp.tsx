@@ -1,14 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
 import Button from "@/Components/Button";
-import { PostData } from "@/Data/Data";
+import { PostData } from "@/Data/Data"; // Ensure this is correct
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosPerson } from "react-icons/io";
 import { motion } from "framer-motion"; // Import motion
 import { slideInVariants, staggerContainer } from "@/utils/motion"; // Adjust the path accordingly
+import { getPost } from "@/service/landingService";
+
+interface Post {
+  id: number;
+  title: string;
+  description: string;
+  imageType: string; // This represents the type of the image
+  imageData: string; // Assuming this is a base64 encoded string
+  createdAt: string; // Add the createdAt field if it's part of your response
+  slug: string; // Add the slug field if it's part of your response
+}
 
 export default function PostComp() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState<{ data: Post[] }>({ data: [] }); // Adjust the initial state
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPost();
+        setPosts(data); 
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const handleClick = () => {
+   
+  };
+ 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!posts.data || posts.data.length === 0) {
+    return <div>No posts available</div>; // Handle the case when there are no posts
+  }
 
   return (
     <motion.div
@@ -77,46 +115,58 @@ export default function PostComp() {
 
       <section className="pt-12 text-black pb-10 lg:pt-[40px] lg:pb-20">
         <div className="container mx-auto">
-          <motion.div className="-mx-4 flex flex-wrap" variants={staggerContainer(0.4, 0.4)} initial="hidden" animate="show">
-            {PostData?.filter((post) =>
-              post.title.toLowerCase().includes(searchTerm.toLowerCase())
-            ).map((post) => (
-              <motion.div
-                key={post.id}
-                className="w-full px-4 md:w-1/2 lg:w-1/3"
-                variants={slideInVariants} // Use your slide-in variants
-              >
-                <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
-                  <div className="mb-8">
-                    <img src={post.image} alt={post.title} className="w-full" />
-                  </div>
-                  <div className="p-6">
-                    <span className="bg-primary mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                      {post.time}
-                    </span>
-                    <h3>
-                      <a
-                        href="javascript:void(0)"
-                        className="text-dark hover:text-primary mb-4 inline-block text-xl font-semibold sm:text-2xl lg:text-xl xl:text-2xl"
+          <motion.div
+            className="-mx-4 flex flex-wrap"
+            variants={staggerContainer(0.4, 0.4)}
+            initial="hidden"
+            animate="show"
+          >
+            {posts.data
+              .filter((post) =>
+                post.title.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((post) => (
+                <motion.div
+                  key={post.id}
+                  className="w-full px-4 md:w-1/2 lg:w-1/3"
+                  variants={slideInVariants} // Use your slide-in variants
+                >
+                  <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
+                    <div className="mb-8">
+                      <img
+                        src={`data:${post.imageType};base64,${post.imageData}`}
+                        alt={post.title}
+                        className="w-full h-52 object-cover" // Fixed height, full width, cover the container
+                      />
+                    </div>
+
+                    <div className="p-6">
+                      <span className="bg-primary mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                        {post.createdAt}
+                      </span>
+                      <h3>
+                        <a
+                          href="javascript:void(0)"
+                          className="text-dark hover:text-primary mb-4 inline-block text-xl font-semibold sm:text-2xl lg:text-xl xl:text-2xl"
+                        >
+                          {post.title}
+                        </a>
+                      </h3>
+                      <p className="text-body-color text-base">
+                        {post.description.length > 100
+                          ? post.description.substring(0, 100) + "..."
+                          : post.description}
+                      </p>
+                      <Link
+                        href={`/posts/${post.slug}`}
+                        className="mt-4 inline-block"
                       >
-                        {post.title}
-                      </a>
-                    </h3>
-                    <p className="text-body-color text-base">
-                      {post.detail.length > 100
-                        ? post.detail.substring(0, 100) + "..."
-                        : post.detail}
-                    </p>
-                    <a
-                      href={`/posts/${post.slug}`} // Assuming you have a dynamic route for each post
-                      className="mt-4 inline-block rounded bg-primary py-2 px-4 text-white font-semibold hover:bg-opacity-90"
-                    >
-                      Read More
-                    </a>
+                        <Button onClick={handleClick} label="Read More" />
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </motion.div>
         </div>
       </section>

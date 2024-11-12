@@ -1,23 +1,34 @@
-/* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState } from "react";
 import { Modal } from "antd";
-import {
-  PrimaryOutlineButton,
-  SecondaryOutlineButton,
-} from "../../Buttons/Buttons";
+import { SecondaryOutlineButton } from "../../Buttons/Buttons";
 
 interface EditCategoryModalProps {
   isOpen: boolean;
   closeModal: () => void;
+  onSave: (categoryName: string) => void; // Pass the category name to the parent on save
 }
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   isOpen,
   closeModal,
+  onSave,
 }) => {
+  const [categoryName, setCategoryName] = useState("");
+
+  // Handle form submission
+  const handleSave = () => {
+    if (categoryName.trim()) {
+      onSave(categoryName); // Send the new category name to the parent
+      setCategoryName(""); // Clear the input after saving
+      closeModal(); // Close the modal
+    } else {
+      alert("Please enter a category name");
+    }
+  };
+
   return (
     <Modal
-      visible={isOpen}
+      open={isOpen}
       onCancel={closeModal}
       footer={null}
       closeIcon={null}
@@ -29,67 +40,38 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         <div className="flex flex-col items-center space-x-2 space-y-2">
           {/* Modal Heading */}
           <h2 className="text-3xl text-center font-bold mb-2 text-black">
-            Add New Income
+            Create new Category
           </h2>
 
-          {/* Description */}
-          <div className="flex-1 ">
-            <div className="grid grid-cols-1 gap-7 text text-l font-normal">
-              {/* amount */}
+          {/* Category Name Input */}
+          <div className="flex-1 w-full">
+            <div className="grid grid-cols-1 gap-7">
               <div>
-                <label className="text-black text-xl font-medium">Amount</label>
+                <label className="text-black text-xl font-medium">
+                  Category Name
+                </label>
                 <input
                   type="text"
-                  className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                  className="w-full px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
+                  placeholder="Enter category name"
                 />
-              </div>
-
-              {/*Category*/}
-
-              <div>
-                <label className="text-black text-xl  font-medium">
-                  Category
-                </label>
-                <select className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark">
-                <option value="">Select Category</option>
-                  <option value="">Teaching</option>
-                  <option value="Freelancing">Freelancing</option>
-                  <option value="Doctor">Doctor</option>
-                </select>
-              </div>
-
-              {/* Other Info */}
-              <div>
-                <label className="text-black text-xl font-medium">Date</label>
-                <input
-                  type="date"
-                  className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
-                />
-              </div>
-              <div>
-              <label className="text-black text-xl font-medium">Description </label>
-              <textarea
-              
-                className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
-                rows={5}
-              ></textarea>
-            </div>
-
               </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-center space-x-10 w-100 mt-6">
+          <div className="flex justify-center space-x-10 w-full mt-6">
             <div onClick={closeModal}>
-              <SecondaryOutlineButton title={"Cancel"} />
+              <SecondaryOutlineButton title="Cancel" />
             </div>
-
-            <SecondaryOutlineButton title={"Save"} />
+            <div onClick={handleSave}>
+              <SecondaryOutlineButton title="Save" />
+            </div>
           </div>
         </div>
-      
-
+      </div>
     </Modal>
   );
 };

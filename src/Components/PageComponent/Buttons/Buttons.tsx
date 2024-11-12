@@ -37,7 +37,7 @@ export function PrimaryButton({ title, classes }: any) {
 }
 
 export function PrimaryOutlineButton({ title }: any) {
-  return <button className="text-sm py-3 px-8 text-nowrap border-2 border-primary rounded-md text-primary">
+  return <button className="text-sm py-3 px-8 text-nowrap border-2 bg-orange-500 text-white rounded-md ">
 
     {title}
 

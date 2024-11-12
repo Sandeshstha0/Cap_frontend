@@ -1,11 +1,46 @@
 /* eslint-disable @next/next/no-img-element */
 import { PostData } from "@/Data/Data";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion"; // Import motion
 import { slideInVariants, staggerContainer } from "@/utils/motion";
+import axiosInstance from "@/utils/axiosInstance";
+interface Post {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+  slug: string;
+  imageType: string; // This represents the type of the image
+  imageData: string; // Assuming this is a base64 encoded string
+}
+
 
 export default function UserPost() {
+  const [posts, setPosts] = useState<Post[]>([]); // Initialize as an empty array
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    const fetchPosts = async () => {
+        try {
+            const response = await axiosInstance.get('/posts/user-posts');
+            setPosts(response.data); // Directly set response.data based on your structure
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
+        }
+    };
+
+    fetchPosts();
+}, []);
+
+if (error) {
+    return <div>Error: {error}</div>;
+}
+
+if (!posts || posts.length === 0) {
+    return <div>No posts available</div>; // Handle the case when there are no posts
+}
+
+
   return (
     <motion.div
       className="bg-white"
@@ -26,7 +61,7 @@ export default function UserPost() {
               initial="hidden"
               animate="show"
             >
-              {PostData?.filter((post) =>
+              {posts?.filter((post) =>
                 post.title.toLowerCase().includes(searchTerm.toLowerCase())
               ).map((post) => (
                 <motion.div
@@ -37,14 +72,14 @@ export default function UserPost() {
                   <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
                     <div className="mb-8">
                       <img
-                        src={post.image}
+                        src={`data:${post.imageType};base64,${post.imageData}`}
                         alt={post.title}
                         className="w-full"
                       />
                     </div>
                     <div className="p-6">
                       <span className="bg-primary mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                        {post.time}
+                        {post.createdAt}
                       </span>
                       <h3>
                         <a
@@ -55,9 +90,9 @@ export default function UserPost() {
                         </a>
                       </h3>
                       <p className="text-body-color text-base">
-                        {post.detail.length > 100
-                          ? post.detail.substring(0, 100) + "..."
-                          : post.detail}
+                        {post.description.length > 100
+                          ? post.description.substring(0, 100) + "..."
+                          : post.description}
                       </p>
                       <a
                         href={`/posts/${post.slug}`} // Assuming you have a dynamic route for each post

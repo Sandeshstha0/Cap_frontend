@@ -7,6 +7,7 @@ import { PostData } from '@/Data/Data';
 import Button from '@/Components/Button';
 import Link from 'next/link';
 import PostComp from '@/Components/PageComponent/Landingpage/Post/PostComp';
+import PracPost from '@/Components/PageComponent/Landingpage/Post/PracPOst';
 
 export default function index() {
 
@@ -15,6 +16,7 @@ export default function index() {
     <Layout>
 
     <PostComp/>
+    {/* <PracPost/> */}
 
 
     </Layout>

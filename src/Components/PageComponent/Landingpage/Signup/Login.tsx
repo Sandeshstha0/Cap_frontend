@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import axiosInstanceModular from "@/utils/axiosInstanceModular";
+
 import { setAxiosAuthHeader } from "@/lib/httpClient";
 import { syncLocalStorageToCookie } from "@/utils/helperFuncions";
 import axios from "axios";
-import { error } from "console";
+
 
 interface FormData {
   email: string;
