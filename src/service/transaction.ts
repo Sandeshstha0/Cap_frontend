@@ -19,4 +19,12 @@ export const getIncomeCategory = async () => {
     });
     return response.data;
   };
+
+  export const createCategoryExpense = async (categoryName: string) => {
+    const response = await axiosInstance.post("http://localhost:8080/api/v1/categories",{
+      name: categoryName,
+      type: 'EXPENSE',  // Adjust the type if needed
+    });
+    return response.data;
+  };
   

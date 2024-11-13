@@ -115,7 +115,8 @@ export default function Index() {
           <EditCategoryModal
             isOpen={editmodalState}
             closeModal={() => seteditModalState(false)}
-          />
+         
+            />
         )}
       </div>
     </UserLayout>
