@@ -1,32 +1,92 @@
-import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
-import RejectModal from '@/Components/PageComponent/Adminpage/RejectModal';
-import { UserData } from '@/Data/UserData';
-import Link from 'next/link';
-import React, { useState } from 'react';
+import DefaultLayout from "@/Components/globalComponent/Admin/Layouts/DefaultLayout";
+import RejectModal from "@/Components/PageComponent/Adminpage/RejectModal";
+import { blockUser, deleteUser, unblockUser } from "@/service/userService";
+import { getUsers } from "@/service/userService"; // Ensure this import is correct
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { toast, ToastContainer } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css";
 
-export default function UserManagement() {
+interface User {
+  id: string;
+  firstname: string;
+  lastName: string;
+  email: string;
+  blocked: boolean; // Added blocked field to the User interface
+}
 
-  // State for search term and modal
-  const [searchTerm, setSearchTerm] = useState('');
-  const [rejectModalState, setRejectModalState] = useState(false);
+const UserManagement: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [rejectModalState, setRejectModalState] = useState<boolean>(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
-  // Open modal function
-  const openRejectModal = () => {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const data = await getUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  };
+
+  const handleStatusChange = async (userId: string, status: string) => {
+    try {
+      if (status === "Blocked") {
+        await blockUser(userId);
+        toast.success("User blocked successfully!");
+      } else {
+        await unblockUser(userId);
+        toast.success("User unblocked successfully!");
+      }
+      fetchUsers();
+    } catch (error) {
+      console.error("Failed to change user status:", error);
+      toast.error("Failed to change user status.");
+    }
+  };
+
+  const confirmDeleteUser = async () => {
+    if (userToDelete) {
+      setLoading(true);
+      try {
+        await deleteUser(userToDelete);
+        fetchUsers();
+        setRejectModalState(false);
+        setUserToDelete(null);
+        toast.success("User deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete user:", error);
+        toast.error("Failed to delete user.");
+      } finally {
+        setLoading(false); // Set loading back to false
+      }
+    }
+  };
+
+  const openRejectModal = (userId: string) => {
+    setUserToDelete(userId);
     setRejectModalState(true);
   };
 
   return (
     <DefaultLayout>
-      <div className='bg-white'>
+      <ToastContainer />
+      <div className="bg-white">
         {/* Page Heading */}
-        <div className=' text-left text-primary font-semibold px-6 py-6 text-3xl'>
+        <div className="text-left text-primary font-semibold px-6 py-6 text-3xl">
           User Management
         </div>
 
         {/* Search and Filter Section */}
         <div className="flex justify-between items-center mb-6 px-6">
-          <button className="inline-flex items-center justify-center gap-2  text-black px-6 py-2 text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition">
+          <button className="inline-flex items-center justify-center gap-2 text-black px-6 py-2 text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition">
             <svg
               className="fill-current"
               width="20"
@@ -88,6 +148,9 @@ export default function UserManagement() {
                     Email
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Details
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -96,44 +159,80 @@ export default function UserManagement() {
                 </tr>
               </thead>
               <tbody>
-                {UserData.filter((role: any) =>
-                  role.firstname.toLowerCase().includes(searchTerm.toLowerCase())
-                ).map((user, index) => (
-                  <tr key={index}>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">{user.firstname} {user.lastName}</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <Link href={`/admin/manageuser/${user.id}`} className="text-blue-600 hover:underline">
-                        view Activity
-                      </Link>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <button 
-                        onClick={openRejectModal}  // Open modal on click
-                        className="text-red-600 hover:text-red-800 transition"
-                      >
-                        <MdDelete size={20} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {users
+                  .filter((user: User) =>
+                    user.firstname
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  )
+                  .map((user: User) => (
+                    <tr key={user.id}>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          {user.firstname} {user.lastName}
+                        </p>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          {user.email}
+                        </p>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <select
+                          value={user.blocked ? "Blocked" : "Active"}
+                          onChange={(e) =>
+                            handleStatusChange(user.id, e.target.value)
+                          }
+                          className={`px-3 py-1 border border-gray-300 rounded-lg text-white focus:outline-none ${user.blocked ? "bg-red" : "bg-green-500"
+                            }`}
+                        >
+                          <option value="Active">Active</option>
+                          <option value="Blocked">Blocked</option>
+                        </select>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <Link
+                          href={`/admin/users/${user.id}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          View
+                        </Link>
+                      </td>
+                      <td className="px-2 py-2 border-b border-gray-200 bg-white">
+                        <button
+                          onClick={() => openRejectModal(user.id)}
+                          className="text-red-500 hover:text-red-700 text-xl"
+                        >
+                          <MdDelete className="text-red" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
         </div>
 
         {/* Reject Modal */}
-        {rejectModalState && (
-          <RejectModal
-            isOpen={rejectModalState}
-            closeModal={() => setRejectModalState(false)}
-          />
+        <RejectModal
+          isOpen={rejectModalState}
+          closeModal={() => setRejectModalState(false)}
+          confirmAction={confirmDeleteUser} // Pass the confirm delete function
+        />
+
+        {loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div
+              className="loader border-t-2 rounded-full border-yellow-500 bg-yellow-300 animate-spin
+aspect-square w-8 flex justify-center items-center text-yellow-700"
+            >
+              $
+            </div>
+          </div>
         )}
       </div>
     </DefaultLayout>
   );
-}
+};
+
+export default UserManagement;

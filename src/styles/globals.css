@@ -265,3 +265,33 @@ input[type="search"]::-webkit-search-cancel-button {
 [x-cloak] {
   display: none !important;
 }
+
+
+/* styles/globals.css or create a separate css file */
+.wave-container {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Adjust height as needed */
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  animation: wave-animation 10s infinite linear;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+body {
+  overflow-x: hidden;
+}

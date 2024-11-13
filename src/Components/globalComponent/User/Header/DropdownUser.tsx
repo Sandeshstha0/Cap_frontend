@@ -2,12 +2,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "../ClickOutside";
+import {  useRouter } from "next/router";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = "/auth/signin"; // Redirect after logging out
+   router.push("/") // Redirect after logging out
   };
 
   return (
