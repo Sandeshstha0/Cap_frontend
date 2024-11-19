@@ -3,11 +3,13 @@ import { useState, FormEvent } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 
 const OtpValidation: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -36,6 +38,7 @@ const OtpValidation: React.FC = () => {
       );
       if (response.status === 200) {
         toast.success("OTP validated successfully!");
+        router.push("/")
         // Redirect user or perform another action here
       }
     } catch (error) {

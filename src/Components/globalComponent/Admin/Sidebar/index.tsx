@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
-
 import useLocalStorage from "@/hooks/useLocalStorage";
 import SidebarItem from "./SidebarItem";
 import ClickOutside from "../ClickOutside";
@@ -47,7 +46,6 @@ const menuGroups = [
         ),
         label: "Dashboard",
         route: "/admin/dashboard",
-
       },
       {
         icon: (
@@ -79,7 +77,6 @@ const menuGroups = [
         ),
         label: "Manage User",
         route: "/admin/manageuser",
-
       },
       {
         icon: (
@@ -122,15 +119,13 @@ const menuGroups = [
           </svg>
         ),
         label: "Profile",
-        route: "/profile",
+        route: "/admin/profile",
       },
-
     ],
   },
   {
     name: "",
     menuItems: [
-
       {
         icon: (
           <svg
@@ -166,9 +161,9 @@ const menuGroups = [
         label: "Content Management",
         route: "#",
         children: [
-          { label: "Home", route: "/helpAndSupport/report" },
-          { label: "About", route: "/helpAndSupport/history" },
-          { label: "Contactus", route: "/helpAndSupport/contactus" },
+          { label: "Home", route: "/admin/cms/home" },
+          { label: "About", route: "/admin/cms/aboutus" },
+          { label: "Contactus", route:"/admin/cms/contactus" },
         ],
       },
     ],
@@ -182,12 +177,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white duration-300 ease-linear lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0 drop-shadow-2xl" : "-translate-x-full"
-          }`}
+        className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white duration-300 ease-linear lg:static lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0 drop-shadow-2xl" : "-translate-x-full"
+        }`}
       >
-
-                {/* <!-- SIDEBAR HEADER --> */}
-                <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-1">
+        {/* <!-- SIDEBAR HEADER --> */}
+        <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-1">
           {/* <Link href="/">
             <Image
               width={176}
@@ -218,7 +213,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </svg>
           </button>
         </div>
-     
+
         {/* <!-- SIDEBAR HEADER --> */}
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">

@@ -38,9 +38,9 @@ export default function Index() {
     return <div>Error: {error}</div>;
   }
 
-  if (!posts.data || posts.data.length === 0) {
-    return <div>No posts available</div>; // Handle the case when there are no posts
-  }
+  // if (!posts.data || posts.data.length === 0) {
+  //   return <div>No posts available</div>; // Handle the case when there are no posts
+  // }
   const handleClick = () => {};
 
   return (
