@@ -192,7 +192,7 @@ const UserManagement: React.FC = () => {
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <Link
-                          href={`/admin/users/${user.id}`}
+                          href={`/admin/manageuser/${user.id}`}
                           className="text-blue-500 hover:underline"
                         >
                           View

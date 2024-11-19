@@ -7,6 +7,24 @@ export const getUsers = async () => {
   return response.data;
 };
 
+export const getUserById = async (id: string) => {
+  const response = await axiosInstance.get(`/admin/users/${id}`);
+  return response.data; // Directly access response.data
+};
+
+export const getPostbyUserID = async (id: string) => {
+  const response = await axiosInstance.get(`/admin/user/post/${id}`);
+  return response.data; // Directly access response.data
+};
+
+export const deleteUserPost = async (id: string) => {
+  const response = await axiosInstance.delete(`/public/${id}`);
+  return response.data; // Directly access response.data
+};
+
+
+getUserById
+
 export const blockUser = async (userId: string) => {
   await axiosInstance.put(`http://localhost:8080/api/v1/admin/block-user/${userId}`);
 };

@@ -1,28 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { SecondaryOutlineButton } from "../../Buttons/Buttons";
 
 interface EditCategoryModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  onSave: (categoryName: string) => void; // Pass the category name to the parent on save
+  onSave: (categoryName: string, categoryId?: string) => void; // Support category ID for editing
+  category?: { id: string; name: string }; // Optional for editing
 }
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   isOpen,
   closeModal,
   onSave,
+  category,
 }) => {
   const [categoryName, setCategoryName] = useState("");
+
+  // Populate the input field when editing a category
+  useEffect(() => {
+    if (category) {
+      setCategoryName(category.name);
+    } else {
+      setCategoryName("");
+    }
+  }, [category]);
 
   // Handle form submission
   const handleSave = () => {
     if (categoryName.trim()) {
-      onSave(categoryName); // Send the new category name to the parent
+      onSave(categoryName, category?.id); // Pass category name and ID (if editing)
       setCategoryName(""); // Clear the input after saving
       closeModal(); // Close the modal
     } else {
-      alert("Please enter a category name");
+      alert("Please enter a valid category name");
     }
   };
 
@@ -36,39 +47,41 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       width={500}
       className="rounded-lg shadow-lg"
     >
-      <div className="p-2">
-        <div className="flex flex-col items-center space-x-2 space-y-2">
+      <div className="p-4">
+        <div className="flex flex-col items-center space-y-4">
           {/* Modal Heading */}
-          <h2 className="text-3xl text-center font-bold mb-2 text-black">
-            Create new Category
+          <h2 className="text-2xl font-bold text-center text-black">
+            {category ? "Edit Category" : "Create New Category"}
           </h2>
 
           {/* Category Name Input */}
-          <div className="flex-1 w-full">
-            <div className="grid grid-cols-1 gap-7">
-              <div>
-                <label className="text-black text-xl font-medium">
-                  Category Name
-                </label>
-                <input
-                  type="text"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
-                  className="w-full px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
-                  placeholder="Enter category name"
-                />
-              </div>
-            </div>
+          <div className="w-full">
+            <label className="block text-black text-lg font-medium mb-2">
+              Category Name
+            </label>
+            <input
+              type="text"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter category name"
+            />
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-center space-x-10 w-full mt-6">
-            <div onClick={closeModal}>
-              <SecondaryOutlineButton title="Cancel" />
-            </div>
-            <div onClick={handleSave}>
-              <SecondaryOutlineButton title="Save" />
-            </div>
+          <div className="flex justify-end space-x-4 w-full">
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
