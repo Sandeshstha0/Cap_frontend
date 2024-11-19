@@ -131,7 +131,7 @@ export default function Index() {
                       }}
                     />
                     <div className="flex items-center mb-2">
-                      <p className="ml-4 text-black mt-6">{post.createdAt}</p>
+                      <p className="ml-4 text-black mt-6"> {new Date(post.createdAt).toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="flex justify-start mt-6 lg:mt-">

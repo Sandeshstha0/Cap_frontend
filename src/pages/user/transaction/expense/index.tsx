@@ -1,12 +1,16 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import EditCategoryModal from "@/Components/PageComponent/UserPage/Transactions/ExpenseCategoryModal";
-import EditIncomeCategoryModal from "@/Components/PageComponent/UserPage/Transactions/IncomeCategoryModal";
-import { getExpenseCategory, getIncomeCategory } from "@/service/transaction";
-
+import {
+  createCategoryExpense,
+  getExpenseCategory,
+  updateCategoryExpense,
+  deleteCategoryExpense,
+} from "@/service/transaction";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// Define Category type
 interface Category {
   id: string;
   name: string;
@@ -15,30 +19,79 @@ interface Category {
 }
 
 export default function Index() {
-  const [editmodalState, seteditModalState] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [editModalState, setEditModalState] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Fetch income categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await getExpenseCategory();
-        setCategories(response.data); // assuming `response.data` is an array of categories
+        setCategories(response.data);
       } catch (error) {
-        console.error("Error fetching income categories:", error);
+        console.error("Error fetching expense categories:", error);
       }
     };
     fetchCategories();
   }, []);
 
-  // Open edit modal
-  const openEditModal = () => {
-    seteditModalState(true);
+  const reloadCategories = async () => {
+    try {
+      const response = await getExpenseCategory();
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error reloading categories:", error);
+    }
+  };
+
+  const handleSaveCategory = async (categoryName: string) => {
+    if (categoryName.trim() === "") {
+      toast.error("Category name cannot be empty!");
+      return;
+    }
+
+    try {
+      if (selectedCategory) {
+        // Update existing category
+        await updateCategoryExpense(selectedCategory.id);
+        toast.success("Category updated successfully!");
+      } else {
+        // Create new category
+        await createCategoryExpense(categoryName);
+        toast.success("Category added successfully!");
+      }
+
+      setEditModalState(false);
+      setSelectedCategory(null);
+      reloadCategories();
+    } catch (error) {
+      console.error("Error saving category:", error);
+      toast.error("Failed to save category.");
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+
+    try {
+      await deleteCategoryExpense(categoryId);
+      setCategories((prev) => prev.filter((category) => category.id !== categoryId));
+      toast.success("Category deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast.error("Failed to delete category.");
+    }
+  };
+
+  const openEditModal = (category?: Category) => {
+    setSelectedCategory(category || null);
+    setEditModalState(true);
   };
 
   return (
     <UserLayout>
+      <ToastContainer />
       <div className="flex-grow bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-bold mb-4">Total income this month</h2>
@@ -70,9 +123,9 @@ export default function Index() {
                 </div>
                 <button
                   className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
-                  onClick={openEditModal}
+                  onClick={() => openEditModal()}
                 >
-                  + Add New 
+                  + Add New
                 </button>
               </div>
             </div>
@@ -89,19 +142,35 @@ export default function Index() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {categories
-                    .filter(category => category.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((category, index) => (
-                      <tr key={index}>
+                    .filter((category) =>
+                      category.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((category) => (
+                      <tr key={category.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link href={`/user/transaction/income/${category.id}`}>
                             {category.name}
                           </Link>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">{category.transactions.length}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{category.totalAmount}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <button className="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
-                          <button className="text-red-600 hover:text-red-900">Delete</button>
+                          {category.transactions.length}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {category.totalAmount}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            className="text-blue-600 hover:text-blue-900 mr-2"
+                            onClick={() => openEditModal(category)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="text-red-600 hover:text-red-900"
+                            onClick={() => handleDeleteCategory(category.id)}
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -110,16 +179,16 @@ export default function Index() {
             </div>
           </div>
         </div>
-        
-        {editmodalState && (
+
+        {editModalState && (
           <EditCategoryModal
-            isOpen={editmodalState}
-            closeModal={() => seteditModalState(false)}
-         
-            />
+            isOpen={editModalState}
+            closeModal={() => setEditModalState(false)}
+            onSave={handleSaveCategory}
+            category={selectedCategory}
+          />
         )}
       </div>
     </UserLayout>
   );
 }
-

@@ -27,4 +27,14 @@ export const getIncomeCategory = async () => {
     });
     return response.data;
   };
+
+  export const updateCategoryExpense = async (id: string) => {
+    const response = await axiosInstance.put(`/categories/${id}`);
+    return response.data; // Directly access response.data
+  };
+
+  export const deleteCategoryExpense = async (id: string) => {
+    const response = await axiosInstance.delete(`/categories/${id}`);
+    return response.data; // Directly access response.data
+  };
   
