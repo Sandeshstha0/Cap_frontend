@@ -1,12 +1,24 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import AddremainderModalProps from "@/Components/PageComponent/UserPage/Notification/AddremainderModal";
 import EditCategoryModal from "@/Components/PageComponent/UserPage/Transactions/ExpenseCategoryModal";
+import useFetchProtectedData from "@/hooks/useFetchProtectedData";
 import { useState } from "react";
+interface UserData {
+  data: {
+    firstname: string;
+    secondname: string;
+  };
+}
 
 export default function Expense() {
   const [editmodalState, seteditModalState] = useState(false);
 
   // Open edit modal
+  const {
+    data: protectedData,
+    error: apiError,
+    refetchData,
+  } = useFetchProtectedData<UserData>('/user');
   const openEditModal = () => {
     seteditModalState(true);
   };
@@ -21,9 +33,9 @@ export default function Expense() {
       <div className="flex-grow bg-gray-100">
         <div className="bg-white rounded-lg p-6 shadow-lg">
           {/* Total Expense */}
-          <h2 className="text-4xl  text-primary font-bold mb-4">
-            Hello, Sachina
-          </h2>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">
+          Hello, {protectedData?.data?.firstname} {protectedData?.data?.secondname}!
+        </h1>
           <p className="text-xl font-medium text-primary mb-6">
             Welcome to Remainder Section
           </p>

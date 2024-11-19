@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
+import AdminProfile from "@/pages/admin/profile";
 
 
 export default function DefaultLayout({
