@@ -5,8 +5,8 @@ import { SecondaryOutlineButton } from "../../Buttons/Buttons";
 interface EditCategoryModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  onSave: (categoryName: string, categoryId?: string) => void; // Support category ID for editing
-  category?: { id: string; name: string }; // Optional for editing
+  onSave: (categoryName: string, categoryId?: string) => void; // Allow categoryId to be optional
+  category?: { id: string; name: string } | null; // Allow category to be null for new categories
 }
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
@@ -22,7 +22,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
     if (category) {
       setCategoryName(category.name);
     } else {
-      setCategoryName("");
+      setCategoryName(""); // Clear input when creating a new category
     }
   }, [category]);
 

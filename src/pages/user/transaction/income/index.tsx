@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import EditIncomeCategoryModal from "@/Components/PageComponent/UserPage/Transactions/IncomeCategoryModal";
-import { createCategory, deleteCategoryExpense, getIncomeCategory, updateCategoryExpense,} from "@/service/transaction";
+import { createCategory, deleteCategoryExpense, getIncomeCategory, updateCategoryExpense, updateCategoryIncome,} from "@/service/transaction";
 
 interface Category {
   id: string;
@@ -37,7 +37,7 @@ export default function Index() {
     try {
       if (selectedCategory) {
         // Update existing category
-        await updateCategoryExpense(selectedCategory.id, categoryName);
+        await updateCategoryIncome(selectedCategory.id, categoryName);
         toast.success("Category updated successfully!");
       } else {
         // Create new category
@@ -79,9 +79,11 @@ export default function Index() {
           <p className="text-4xl font-bold text-gray-700 mb-6">17000</p>
         </div>
 
+       
+
         <div className="w-full">
           <div className="bg-white p-6 mt-6 space-y-6 rounded-lg shadow-lg">
-            <div className="flex justify-between items-center pb-4 border-gray-200">
+            <div className="flex justify-between items-center px-2 border-gray-200">
               <div className="flex items-center space-x-4">
                 <input
                   type="text"
@@ -100,7 +102,11 @@ export default function Index() {
                   + Add New
                 </button>
               </div>
+
+              
             </div>
+
+            <h1>Please select a category or create a new category </h1>
 
             <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
               <table className="min-w-full divide-y divide-gray-200 rounded-lg">

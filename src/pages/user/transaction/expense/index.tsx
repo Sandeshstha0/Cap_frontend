@@ -54,7 +54,7 @@ export default function Index() {
     try {
       if (selectedCategory) {
         // Update existing category
-        await updateCategoryExpense(selectedCategory.id);
+        await updateCategoryExpense(selectedCategory.id,categoryName);
         toast.success("Category updated successfully!");
       } else {
         // Create new category

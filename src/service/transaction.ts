@@ -28,10 +28,24 @@ export const getIncomeCategory = async () => {
     return response.data;
   };
 
-  export const updateCategoryExpense = async (id: string) => {
-    const response = await axiosInstance.put(`/categories/${id}`);
+  export const updateCategoryExpense = async (id: string,categoryName:string) => {
+    const response = await axiosInstance.put(`/categories/${id}`,{
+      name: categoryName,
+      type: 'EXPENSE',  // Adjust the type if needed
+    });
     return response.data; // Directly access response.data
   };
+
+  export const updateCategoryIncome = async (id: string,categoryName:string) => {
+    const response = await axiosInstance.put(`/categories/${id}`,{
+      name: categoryName,
+      type: 'INCOME',  // Adjust the type if needed
+    });
+    return response.data; // Directly access response.data
+  };
+
+
+  
 
   export const deleteCategoryExpense = async (id: string) => {
     const response = await axiosInstance.delete(`/categories/${id}`);
