@@ -148,7 +148,7 @@ export default function Index() {
                     .map((category) => (
                       <tr key={category.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <Link href={`/user/transaction/income/${category.id}`}>
+                          <Link href={`/user/transaction/expense/${category.id}`}>
                             {category.name}
                           </Link>
                         </td>

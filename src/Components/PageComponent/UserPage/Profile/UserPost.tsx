@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion"; // Import motion
 import { slideInVariants, staggerContainer } from "@/utils/motion";
 import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/router";
+
 interface Post {
   id: number;
   title: string;
@@ -14,11 +16,12 @@ interface Post {
   imageData: string; // Assuming this is a base64 encoded string
 }
 
-
 export default function UserPost() {
   const [posts, setPosts] = useState<Post[]>([]); // Initialize as an empty array
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter(); // For navigating after edit/delete
+
   useEffect(() => {
     const fetchPosts = async () => {
         try {
@@ -30,16 +33,29 @@ export default function UserPost() {
     };
 
     fetchPosts();
-}, []);
+  }, []);
 
-if (error) {
+  const handleDelete = async (postId: number) => {
+    try {
+      await axiosInstance.delete(`/posts/${postId}`);
+      // Remove the deleted post from the local state
+      setPosts(posts.filter(post => post.id !== postId));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete post');
+    }
+  };
+
+  const handleEdit = (postId: number) => {
+    router.push(`/user/post/edit/${postId}`); // Navigate to an edit page
+  };
+
+  if (error) {
     return <div>Error: {error}</div>;
-}
+  }
 
-if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0) {
     return <div>No posts available</div>; // Handle the case when there are no posts
-}
-
+  }
 
   return (
     <motion.div
@@ -100,6 +116,22 @@ if (!posts || posts.length === 0) {
                       >
                         Read More
                       </a>
+
+                      {/* Edit and Delete Buttons */}
+                      <div className="mt-4 flex space-x-4">
+                        <button
+                          onClick={() => handleEdit(post.id)}
+                          className="inline-block rounded bg-yellow-500 py-2 px-4 text-white font-semibold hover:bg-yellow-400"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          className="inline-block rounded bg-red py-2 px-4 text-white font-semibold hover:bg-red-400"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

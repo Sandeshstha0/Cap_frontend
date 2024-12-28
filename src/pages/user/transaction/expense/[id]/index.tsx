@@ -1,12 +1,12 @@
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import ExpenseModal from "@/Components/PageComponent/UserPage/Transactions/Income/ExpenseModal";
-import IncomeModal from "@/Components/PageComponent/UserPage/Transactions/Income/IncomeModal";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
-const IncomeDetails = () => {
+const ExpenseDetail = () => {
   const [editModalState, setEditModalState] = useState(false);
   const router = useRouter();
   const id = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
@@ -15,6 +15,7 @@ const IncomeDetails = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [timeFilter, setTimeFilter] = useState("all");
 
   useEffect(() => {
     if (id) {
@@ -39,6 +40,24 @@ const IncomeDetails = () => {
   if (!category) {
     return <div>Category not found.</div>;
   }
+
+  const filterTransactions = () => {
+    const now = dayjs();
+
+    return category.transactions.filter((txn: any) => {
+      const txnDate = dayjs(txn.date);
+      if (timeFilter === "day" && txnDate.isSame(now, "day")) return true;
+      if (timeFilter === "week" && txnDate.isSame(now, "week")) return true;
+      if (timeFilter === "month" && txnDate.isSame(now, "month")) return true;
+      if (timeFilter === "year" && txnDate.isSame(now, "year")) return true;
+      if (timeFilter === "all") return true;
+      return false;
+    });
+  };
+
+  const filteredTransactions = filterTransactions().filter((t: any) =>
+    t.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const openModalForNewTransaction = () => {
     setSelectedTransaction(null);
@@ -132,6 +151,17 @@ const IncomeDetails = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
             />
+            <select
+              className="border border-gray-300 px-4 py-2 rounded focus:outline-none"
+              value={timeFilter}
+              onChange={(e) => setTimeFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="day">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
             <button
               className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
               onClick={openModalForNewTransaction}
@@ -151,22 +181,14 @@ const IncomeDetails = () => {
           <table className="min-w-full divide-y divide-gray-200 rounded-lg">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Action
-                </th>
+                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">Description</th>
+                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {category?.transactions?.map((item: any) => (
+              {filteredTransactions.map((item: any) => (
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
@@ -198,11 +220,11 @@ const IncomeDetails = () => {
           closeModal={() => setIsModalOpen(false)}
           onSave={handleSaveTransaction}
           transaction={selectedTransaction}
-          id={id}
+          id={id ? Number(id) : 0}
         />
       )}
     </UserLayout>
   );
 };
 
-export default IncomeDetails;
+export default ExpenseDetail;

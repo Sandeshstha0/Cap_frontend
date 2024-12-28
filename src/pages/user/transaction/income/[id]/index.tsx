@@ -4,6 +4,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const IncomeDetails = () => {
   const [editModalState, setEditModalState] = useState(false);
@@ -14,6 +15,7 @@ const IncomeDetails = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [timeFilter, setTimeFilter] = useState<string>("all");
 
   useEffect(() => {
     if (id) {
@@ -38,6 +40,35 @@ const IncomeDetails = () => {
   if (!category) {
     return <div>Category not found.</div>;
   }
+
+  const filterTransactions = () => {
+    const now = dayjs();
+
+    if (timeFilter === "day") {
+      return category.transactions.filter((txn: any) =>
+        dayjs(txn.date).isSame(now, "day")
+      );
+    }
+    if (timeFilter === "week") {
+      return category.transactions.filter((txn: any) =>
+        dayjs(txn.date).isSame(now, "week")
+      );
+    }
+    if (timeFilter === "month") {
+      return category.transactions.filter((txn: any) =>
+        dayjs(txn.date).isSame(now, "month")
+      );
+    }
+    if (timeFilter === "year") {
+      return category.transactions.filter((txn: any) =>
+        dayjs(txn.date).isSame(now, "year")
+      );
+    }
+
+    return category.transactions;
+  };
+
+  const filteredTransactions = filterTransactions();
 
   const openModalForNewTransaction = () => {
     setSelectedTransaction(null);
@@ -108,7 +139,7 @@ const IncomeDetails = () => {
       try {
         await axiosInstance.delete(`/categories/${id}`);
         toast.success("Category deleted successfully!");
-        router.push("/categories"); // Redirect after deletion
+        router.push("/categories");
       } catch (error) {
         console.error("Error deleting category:", error);
         toast.error("Failed to delete category.");
@@ -131,6 +162,17 @@ const IncomeDetails = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
             />
+            <select
+              value={timeFilter}
+              onChange={(e) => setTimeFilter(e.target.value)}
+              className="border border-gray-300 px-4 py-2 rounded"
+            >
+              <option value="all">All</option>
+              <option value="day">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
             <button
               className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
               onClick={openModalForNewTransaction}
@@ -165,7 +207,7 @@ const IncomeDetails = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {category?.transactions?.map((item: any) => (
+              {filteredTransactions.map((item: any) => (
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
@@ -197,7 +239,7 @@ const IncomeDetails = () => {
           closeModal={() => setIsModalOpen(false)}
           onSave={handleSaveTransaction}
           transaction={selectedTransaction}
-          id={id}
+          id={id ? Number(id) : 0}
         />
       )}
     </UserLayout>

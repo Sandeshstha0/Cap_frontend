@@ -37,6 +37,11 @@ const OverView: React.FC = () => {
     refetchData,
   } = useFetchProtectedData<ProtectedData>('/categories'); // Specify the generic type for API response
 
+  // Sort categories by the number of transactions and take the top 2
+  const topCategories = protectedData?.data
+    ?.sort((a, b) => b.transactions.length - a.transactions.length)
+    .slice(0, 2);
+
   // if (apiError) {
   //   return <p>Error fetching data: {apiError.message}</p>;
   // }
@@ -46,7 +51,7 @@ const OverView: React.FC = () => {
       <h1 className="font-semibold text-lg">Overview</h1>
 
       <div className="flex flex-wrap justify-center">
-        {protectedData?.data?.map((category, index) => (
+        {topCategories?.map((category, index) => (
           <div key={category.id} className="w-full md:w-1/2 mb-4 p-2 md:p-8 rounded-lg">
             <div className="border-2 rounded-lg shadow-lg">
               <div className="p-4 border-b">
