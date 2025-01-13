@@ -107,7 +107,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({
         <div className="p-4">
           <div className="flex flex-col items-center space-y-4">
             {/* Modal Heading */}
-            <h2 className="text-2xl font-bold text-center text-black">
+            <h2 className="text-2xl font-bold text-center text-orange-500">
               {transaction ? "Edit Transaction" : "Create New Transaction"}
             </h2>
 
@@ -120,7 +120,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                 className={`w-full px-3 py-2 text-black bg-gray-100 border ${
                   errors.amount ? "border-red-500" : "border-gray-300"
-                } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                } rounded focus:outline-none focus:ring-2 focus:ring-orange-500`}
                 placeholder="Enter amount"
                 required
               />
@@ -136,7 +136,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({
                 onChange={(e) => setDate(e.target.value)}
                 className={`w-full px-3 py-2 text-black bg-gray-100 border ${
                   errors.date ? "border-red-500" : "border-gray-300"
-                } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                } rounded focus:outline-none focus:ring-2 focus:ring-orange-500`}
                 required
               />
               {errors.date && <p className="text-red text-sm">{errors.date}</p>}
@@ -151,7 +151,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({
                 onChange={(e) => setDescription(e.target.value)}
                 className={`w-full px-3 py-2 text-black bg-gray-100 border ${
                   errors.description ? "border-red-500" : "border-gray-300"
-                } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                } rounded focus:outline-none focus:ring-2 focus:ring-orange-500`}
                 placeholder="Enter description (max-100 characters)"
               />
               {errors.description && <p className="text-red text-sm">{errors.description}</p>}
@@ -160,7 +160,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({
             {/* Save Button */}
             <button
               onClick={handleSave}
-              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+              className="mt-4 px-6 py-2 bg-orange-600 text-white rounded-full hover:bg-orange-700"
             >
               {transaction ? "Save Changes" : "Save Transaction"}
             </button>

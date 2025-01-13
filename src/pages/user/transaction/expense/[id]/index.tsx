@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline, MdOutlineAttachMoney } from "react-icons/md";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
 
 const ExpenseDetail = () => {
   const [editModalState, setEditModalState] = useState(false);
@@ -18,6 +21,10 @@ const ExpenseDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [timeFilter, setTimeFilter] = useState("all");
+
+  const handleBack = () => {
+    router.back();
+  };
 
   useEffect(() => {
     if (id) {
@@ -144,8 +151,23 @@ const ExpenseDetail = () => {
     <UserLayout>
       <div>
         <div className="bg-white p-4 rounded-lg shadow-lg mb-4 text-black">
-          <h1 className="text-2xl font-bold">{category.name}</h1>
-          <p className="text-lg">Total Amount: <span className="text-orange-500 font-semibold text-2xl">{category.totalAmount}</span> </p>
+          <div className="flex justify-between space-x-2 ">
+            <div>
+              <h1 className="text-2xl font-bold">{category.name}</h1>
+              <p className="text-lg">
+                Total Amount:{" "}
+                <span className="text-orange-500 font-semibold text-2xl">
+                  {category.totalAmount}
+                </span>{" "}
+              </p>
+            </div>
+            <button
+              onClick={handleBack}
+              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125"
+            >
+              <IoArrowBackCircleOutline />
+            </button>
+          </div>
 
           <div className="flex justify-between items-center mt-4  border-gray-200">
             <div className="flex items-center space-x-4">
@@ -183,50 +205,57 @@ const ExpenseDetail = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200 rounded-lg">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredTransactions.map((item: any) => (
-                <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {item.description}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-2"
-                      onClick={() => openModalForEditing(item)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900"
-                      onClick={() => handleDeleteTransaction(item.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+        <div className="overflow-x-auto shadow-lg bg-white p-4 rounded-lg ">
+          <div className="overflow-x-auto shadow-lg rounded-lg ">
+            <table className="min-w-full divide-y rou  divide-gray-200 rounded-lg">
+              <thead className="bg-[#f6c624] text-black rounded-lg">
+                <tr>
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
+                    Description
+                  </th>
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
+                    Action
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredTransactions.map((item: any) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-4 whitespace-nowrap flex items-center ">
+                      <span className="text-orange-500 font-semibold text-2xl">
+                        <MdOutlineAttachMoney  />
+                      </span>
+                      {item.amount}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {item.description}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap space-x-3">
+                      <button
+                        className="text-blue-600 text-2xl hover:text-blue-900 mr-2 "
+                        onClick={() => openModalForEditing(item)}
+                      >
+                        <CiEdit className="hover:scale-125" />
+                      </button>
+                      <button
+                        className="text-red hover:text-red text-2xl hover:scale-125"
+                        onClick={() => handleDeleteTransaction(item.id)}
+                      >
+                        <MdDeleteOutline />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

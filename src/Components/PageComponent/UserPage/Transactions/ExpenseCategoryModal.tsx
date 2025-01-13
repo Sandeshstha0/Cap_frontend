@@ -51,7 +51,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
 
   return (
     <Modal
-      visible={isOpen}
+      open={isOpen}
       onCancel={handleClose}
       footer={null}
       centered
@@ -61,13 +61,13 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       <div className="p-4">
         <div className="flex flex-col items-center space-y-4">
           {/* Modal Heading */}
-          <h2 className="text-3xl font-bold text-center text-black">
-            {category ? "Edit Category" : "Add New Category"}
+          <h2 className="text-2xl font-bold text-center text-black">
+            {category ? "Edit Category" : "Create New Category"}
           </h2>
 
           {/* Description */}
           <div className="w-full">
-            <label htmlFor="categoryName" className="block text-xl font-medium text-black">
+            <label className="block text-black text-lg font-medium mb-2">
               Category Name
             </label>
             <input
@@ -75,7 +75,9 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
               type="text"
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
-              className="w-full px-4 py-2 mt-2 text-sm text-black bg-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className={`w-full px-3 py-2 text-black bg-gray-100 border ${
+                error ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-2 focus:ring-orange-500`}
               placeholder="Enter category name"
               aria-label="Category Name"
             />
@@ -84,14 +86,21 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-center space-x-10 w-full mt-6">
-          <div onClick={handleClose}>
-            <SecondaryOutlineButton title={"Cancel"} />
-          </div>
+        <div className="flex mt-2 justify-end space-x-4 w-full">
+          <button
+            className="text-orange-400 font-semibold text-base"
+            onClick={handleClose}
+          >
+            {" "}
+            Cancel
+          </button>
 
-          <div onClick={handleSave}>
-            <PrimaryOutlineButton title={"Save"} />
-          </div>
+          <button
+            onClick={handleSave}
+            className="px-6 font-semibold text-base py-2 text-white bg-orange-500 rounded hover:bg-orange-600"
+          >
+            Save
+          </button>
         </div>
       </div>
     </Modal>
