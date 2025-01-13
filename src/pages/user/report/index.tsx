@@ -10,8 +10,8 @@ export default function index() {
     <UserLayout>
    <OverView/>
    <div className='bg-white'>
-   <BasicLineChart/>
-   <BasicPie/>
+   {/* <BasicLineChart/>
+   <BasicPie/> */}
    <PieChartData/>
 
    </div>

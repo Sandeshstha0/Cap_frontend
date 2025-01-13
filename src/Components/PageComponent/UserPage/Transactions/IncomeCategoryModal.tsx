@@ -7,6 +7,7 @@ interface EditCategoryModalProps {
   closeModal: () => void;
   onSave: (categoryName: string, categoryId?: string) => void; // Allow categoryId to be optional
   category?: { id: string; name: string } | null; // Allow category to be null for new categories
+  existingCategories?: string[]; // Array of existing category names (if you want to check for duplicates)
 }
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
@@ -14,8 +15,10 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   closeModal,
   onSave,
   category,
+  existingCategories = [], // Optional, default to an empty array
 }) => {
   const [categoryName, setCategoryName] = useState("");
+  const [error, setError] = useState<string>("");
 
   // Populate the input field when editing a category
   useEffect(() => {
@@ -24,17 +27,31 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
     } else {
       setCategoryName(""); // Clear input when creating a new category
     }
+    setError(""); // Reset error state when input changes
   }, [category]);
 
   // Handle form submission
   const handleSave = () => {
-    if (categoryName.trim()) {
-      onSave(categoryName, category?.id); // Pass category name and ID (if editing)
-      setCategoryName(""); // Clear the input after saving
-      closeModal(); // Close the modal
-    } else {
-      alert("Please enter a valid category name");
+    if (!categoryName.trim()) {
+      setError("Category name cannot be empty");
+      return;
     }
+
+    if (categoryName.trim().length < 3) {
+      setError("Category name must be at least 3 characters long");
+      return;
+    }
+
+    if (existingCategories.includes(categoryName.trim())) {
+      setError("Category name already exists");
+      return;
+    }
+
+    // If validation passes, call onSave and close the modal
+    onSave(categoryName, category?.id);
+    setCategoryName(""); // Clear the input after saving
+    closeModal(); // Close the modal
+    setError(""); // Reset error state
   };
 
   return (
@@ -62,23 +79,25 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
             <input
               type="text"
               value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
-              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setCategoryName(e.target.value);
+                setError(""); // Clear error on input change
+              }}
+              className={`w-full px-3 py-2 text-black bg-gray-100 border ${
+                error ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-2 focus:ring-orange-500`}
               placeholder="Enter category name"
             />
+            {error && <p className="text-red text-sm mt-2">{error}</p>}
           </div>
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-4 w-full">
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-200"
-            >
-              Cancel
-            </button>
+            <button className="text-orange-400 font-semibold text-base" onClick={closeModal}> Cancel</button>
+          
             <button
               onClick={handleSave}
-              className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+              className="px-6 font-semibold text-base py-2 text-white bg-orange-500 rounded hover:bg-orange-600"
             >
               Save
             </button>

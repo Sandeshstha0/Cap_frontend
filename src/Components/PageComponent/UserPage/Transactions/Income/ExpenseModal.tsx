@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ExpenseModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  id:number;
+  id: number;
   onSave: (transaction: {
     amount: number;
     type: string;
     date: string;
     description: string;
-    category:{
-      id:number;
-    } 
-   
+    category: { id: number };
   }) => void;
   transaction?: { id: number; amount: number; type: string; date: string; description: string } | null;
 }
@@ -23,12 +22,13 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
   closeModal,
   onSave,
   transaction,
-  id
+  id,
 }) => {
   const [amount, setAmount] = useState<number>(0);
   const [type, setType] = useState<string>("EXPENSE");
   const [date, setDate] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Populate the input fields when editing a transaction
   useEffect(() => {
@@ -44,23 +44,45 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
     }
   }, [transaction]);
 
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    
+    if (amount <= 0) {
+      newErrors.amount = "Amount must be greater than 0.";
+    }
+    
+    if (!date) {
+      newErrors.date = "Date is required.";
+    }
+
+    if (description.trim().length === 0) {
+      newErrors.description = "Description is required.";
+    } else if (description.length > 100) {
+      newErrors.description = "Description cannot exceed 100 characters.";
+    }
+
+    setErrors(newErrors);
+    
+    // Return true if no errors, else false
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Handle form submission
   const handleSave = () => {
-    if (amount && description.trim()) {
+    if (validateForm()) {
       onSave({
         amount,
         type,
         date,
         description,
-        category  :{
-          id:id ?? 0
-        } , // Assuming you get categoryId from the transaction
+        category: { id: id ?? 0 },
       });
       setAmount(0); // Reset after saving
       setDescription(""); // Clear description
       closeModal(); // Close the modal
     } else {
-      alert("Please enter valid transaction data");
+      toast.error("Please fix the errors and try again.");
     }
   };
 
@@ -74,6 +96,8 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
       width={500}
       className="rounded-lg shadow-lg"
     >
+      <ToastContainer  />
+      
       <div className="p-4">
         <div className="flex flex-col items-center space-y-4">
           {/* Modal Heading */}
@@ -90,24 +114,13 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
               type="number"
               value={amount}
               onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-3 py-2 text-black bg-gray-100 border ${
+                errors.amount ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Enter amount"
+              required
             />
-          </div>
-
-          {/* Type Selector */}
-          <div className="w-full">
-            <label className="block text-black text-lg font-medium mb-2">
-              Type
-            </label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="EXPENSE">EXPENSE</option>
-              <option value="EXPENSE">EXPENSE</option>
-            </select>
+            {errors.amount && <p className="text-red text-sm">{errors.amount}</p>}
           </div>
 
           {/* Date Input */}
@@ -119,8 +132,12 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-3 py-2 text-black bg-gray-100 border ${
+                errors.date ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              required
             />
+            {errors.date && <p className="text-red text-sm">{errors.date}</p>}
           </div>
 
           {/* Description Input */}
@@ -132,9 +149,14 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 text-black bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter description"
+              className={`w-full px-3 py-2 text-black bg-gray-100 border ${
+                errors.description ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              placeholder="Enter description (max-100 characters)"
             />
+            {errors.description && (
+              <p className="text-red text-sm">{errors.description}</p>
+            )}
           </div>
 
           {/* Save Button */}
