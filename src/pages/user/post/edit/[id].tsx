@@ -11,31 +11,47 @@ interface Post {
   title: string;
   description: string;
   content: string; // Assuming this is the content for the post
-  imageData: string; // Base64 image data
+  imageData: string; // Base64 image data (if applicable)
+  data: {
+    title: string;
+    description: string;
+  };
 }
 
 const EditPost = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [editorContent, setEditorContent] = useState<string>(''); // For ReactQuill content
   const [image, setImage] = useState<File | null>(null); // For image upload
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
   const { register, handleSubmit, setValue } = useForm();
   const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
-    if (id) {
+    if (typeof window !== 'undefined' && id) { // Ensure this runs only on the client side
       const fetchPost = async () => {
         try {
-          const response = await axiosInstance.get(`/posts/${id}`);
+          console.log("Fetching post with id:", id); // Debug log
+          const response = await axiosInstance.get(`http://localhost:8080/api/v1/posts/${id}`);
+          console.log("Post fetched successfully:", response.data); // Debug log
+          
+          // Set fetched post data
           setPost(response.data);
-          setValue("title", response.data.title); // Set form values
-          setValue("description", response.data.description);
-          setEditorContent(response.data.content); // Set content
+          
+          // Set form values for title, description, and content
+          setValue("title", response.data.title); // Set title value
+          setValue("description", response.data.description); // Set description value
+          setEditorContent(response.data.content); // Set content (HTML)
+
         } catch (err) {
           console.error("Error fetching post:", err);
+        } finally {
+          setLoading(false); // Hide loading indicator once data is fetched
         }
       };
       fetchPost();
+    } else {
+      console.log("No id found in router.query or running on the server"); // Debug log
     }
   }, [id, setValue]);
 
@@ -60,13 +76,15 @@ const EditPost = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      router.push(`/posts/${id}`); // Navigate to the updated post
+      router.push(`/user/profile`); // Navigate to the updated post
     } catch (err) {
       console.error("Error updating post:", err);
     }
   };
 
- 
+  if (loading) {
+    return <div>Loading...</div>; // Show loading message until data is fetched
+  }
 
   return (
     <UserLayout>
@@ -79,14 +97,14 @@ const EditPost = () => {
               htmlFor="title"
               className="block text-sm font-medium text-gray-700"
             >
-              Title
+              Title 
             </label>
             <input
               type="text"
               id="title"
               {...register("title", { required: true })}
               className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter the post title"
+              placeholder={post?.data.title}
             />
           </div>
 
@@ -101,9 +119,10 @@ const EditPost = () => {
             <input
               type="text"
               id="description"
+              defaultValue={post?.description || ""} // Use the fetched description here
               {...register("description", { required: true })}
               className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter a brief description"
+              placeholder={post?.data.description}
             />
           </div>
 
@@ -117,7 +136,7 @@ const EditPost = () => {
               onChange={setEditorContent}
               className="mt-1 h-48"
               theme="snow"
-              placeholder="Write your content here..."
+              placeholder="Write something amazing..."
             />
           </div>
 

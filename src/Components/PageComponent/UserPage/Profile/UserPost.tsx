@@ -12,6 +12,7 @@ interface Post {
   description: string;
   createdAt: string;
   slug: string;
+  data:any;
   imageType: string; // This represents the type of the image
   imageData: string; // Assuming this is a base64 encoded string
 }
@@ -77,9 +78,10 @@ export default function UserPost() {
               initial="hidden"
               animate="show"
             >
-              {posts?.filter((post) =>
+        
+              {Array.isArray(posts.data) && posts.data.filter((post:any) =>
                 post.title.toLowerCase().includes(searchTerm.toLowerCase())
-              ).map((post) => (
+              ).map((post:any) => (
                 <motion.div
                   key={post.id}
                   className="w-full px-4 md:w-1/2 lg:w-1/3"

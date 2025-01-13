@@ -15,6 +15,9 @@ import { Calendar, dateFnsLocalizer, Event } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
+import ReminderAnimation from "@/Components/Animations/ReminderAnimation";
 
 interface UserData {
   data: {
@@ -69,7 +72,7 @@ export default function ReminderPage(): JSX.Element {
     id: reminder.id,
     title: reminder.title,
     reminderTime: reminder.reminderTime,
-    description:reminder.description,
+    description: reminder.description,
     start: new Date(reminder.reminderTime),
     end: new Date(reminder.reminderTime),
     allDay: false,
@@ -145,14 +148,24 @@ export default function ReminderPage(): JSX.Element {
     <UserLayout>
       <ToastContainer />
       <div className="flex-grow bg-gray-100">
-        <div className="bg-white rounded-lg p-6 shadow-lg">
-          <h1 className="text-xl md:text-2xl text-orange-400 lg:text-3xl font-bold mb-4">
-            Hey, {protectedData?.data?.firstname}{" "}
-            {protectedData?.data?.secondname} 👋 !
-          </h1>
-          <p className="text-lg text-slate-600 mb-2">
-            Welcome to the Reminder Section.
-          </p>
+        <div className="flex justify-between bg-white rounded-lg  shadow-lg">
+          <div className="flex space-x-4 items-center">
+            <div>
+              <ReminderAnimation />
+            </div>
+            <div>
+              <h1 className="text-xl md:text-2xl text-orange-400 lg:text-3xl font-bold mb-4">
+                Hey, {protectedData?.data?.firstname}{" "}
+                {protectedData?.data?.secondname} 👋 !
+              </h1>
+              <p className="text-lg text-slate-600 mb-2">
+                Did you miss out any thing? 🤔
+              </p>
+              <p className="text-lg text-slate-600">
+                Here you can add, edit, and delete reminders.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white p-6 mt-5 rounded-lg shadow-lg">
@@ -229,18 +242,18 @@ export default function ReminderPage(): JSX.Element {
                         <td className="px-6 py-4">
                           {new Date(reminder.reminderTime).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 whitespace-nowrap space-x-3">
                           <button
-                            className="text-blue-600 hover:text-blue-900 mr-2"
+                            className="text-blue-600 text-2xl hover:text-blue-900 mr-2 "
                             onClick={() => openModalForEdit(reminder)}
                           >
-                            Edit
+                            <CiEdit className="hover:scale-125" />
                           </button>
                           <button
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red hover:text-red text-2xl hover:scale-125"
                             onClick={() => handleDelete(reminder.id)}
                           >
-                            Delete
+                            <MdDeleteOutline />
                           </button>
                         </td>
                       </tr>
@@ -265,7 +278,9 @@ export default function ReminderPage(): JSX.Element {
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: 500 }}
-                onSelectEvent={(event : any) => openModalForEdit(event as Reminder)}
+                onSelectEvent={(event: any) =>
+                  openModalForEdit(event as Reminder)
+                }
               />
             </div>
           )}
