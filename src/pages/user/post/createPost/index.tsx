@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form"; // Import types from r
 import axiosInstance from "@/utils/axiosInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 
 interface FormData {
   title: string;
@@ -18,6 +19,7 @@ const Index: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>(); // Use FormData type
   const [editorContent, setEditorContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null); // State type for image
+   const router = useRouter();
 
   const handleSubmits: SubmitHandler<FormData> = async (data) => {
     const formData = new FormData(); // Create a new FormData object
@@ -37,6 +39,7 @@ const Index: React.FC = () => {
       toast.success(
         "Post created successfully"
       );
+      router.push(`/user/profile`)
       // Handle successful post creation (e.g., redirect, show success message)
     } catch (error) {
       console.error("Error creating post:", error);

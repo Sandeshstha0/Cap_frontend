@@ -113,7 +113,7 @@ export default function Index() {
             ).map((post, index) => (
               <div
                 key={index}
-                className="flex flex-col lg:flex-row bg-white shadow-lg space-y-4 lg:space-y-0 lg:space-x-4 p-6 justify-between items-start mb-5"
+                className="flex flex-col shadow-card lg:flex-row bg-white  space-y-4 lg:space-y-0 lg:space-x-4 p-6 justify-between items-start mb-5"
               >
                 {/* Blog Content */}
                 <div className="w-full lg:w-2/3 flex flex-col justify-between">

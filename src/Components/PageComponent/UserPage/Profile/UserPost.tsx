@@ -5,6 +5,9 @@ import { motion } from "framer-motion"; // Import motion
 import { slideInVariants, staggerContainer } from "@/utils/motion";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/router";
+import { LiaUserEditSolid } from "react-icons/lia";
+import Link from "next/link";
+import { MdDelete } from "react-icons/md";
 
 interface Post {
   id: number;
@@ -12,7 +15,7 @@ interface Post {
   description: string;
   createdAt: string;
   slug: string;
-  data:any;
+  data: any;
   imageType: string; // This represents the type of the image
   imageData: string; // Assuming this is a base64 encoded string
 }
@@ -25,12 +28,12 @@ export default function UserPost() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-        try {
-            const response = await axiosInstance.get('/posts/user-posts');
-            setPosts(response.data); // Directly set response.data based on your structure
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
-        }
+      try {
+        const response = await axiosInstance.get("/posts/user-posts");
+        setPosts(response.data.data); // Directly set response.data based on your structure
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      }
     };
 
     fetchPosts();
@@ -40,9 +43,9 @@ export default function UserPost() {
     try {
       await axiosInstance.delete(`/posts/${postId}`);
       // Remove the deleted post from the local state
-      setPosts(posts.filter(post => post.id !== postId));
+      setPosts(posts.filter((post) => post.id !== postId));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete post');
+      setError(err instanceof Error ? err.message : "Failed to delete post");
     }
   };
 
@@ -78,66 +81,69 @@ export default function UserPost() {
               initial="hidden"
               animate="show"
             >
-        
-              {Array.isArray(posts.data) && posts.data.filter((post:any) =>
-                post.title.toLowerCase().includes(searchTerm.toLowerCase())
-              ).map((post:any) => (
-                <motion.div
-                  key={post.id}
-                  className="w-full px-4 md:w-1/2 lg:w-1/3"
-                  variants={slideInVariants} // Use your slide-in variants
-                >
-                  <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
-                    <div className="mb-8">
-                      <img
-                        src={`data:${post.imageType};base64,${post.imageData}`}
-                        alt={post.title}
-                        className="w-full"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <span className="bg-primary mb-5 inline-block rounded py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                        {post.createdAt}
-                      </span>
-                      <h3>
-                        <a
-                          href="javascript:void(0)"
-                          className="text-dark hover:text-primary mb-4 inline-block text-xl font-semibold sm:text-2xl lg:text-xl xl:text-2xl"
-                        >
-                          {post.title}
-                        </a>
-                      </h3>
-                      <p className="text-body-color text-base">
-                        {post.description.length > 100
-                          ? post.description.substring(0, 100) + "..."
-                          : post.description}
-                      </p>
-                      <a
-                        href={`/posts/${post.slug}`} // Assuming you have a dynamic route for each post
-                        className="mt-4 inline-block rounded bg-primary py-2 px-4 text-white font-semibold hover:bg-opacity-90"
-                      >
-                        Read More
-                      </a>
-
-                      {/* Edit and Delete Buttons */}
-                      <div className="mt-4 flex space-x-4">
+              {posts
+                .filter((post) =>
+                  post.title.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((post) => (
+                  <motion.div
+                    key={post.id}
+                    className="w-full px-4 md:w-1/2 lg:w-1/3"
+                    variants={slideInVariants} // Use your slide-in variants
+                  >
+                    <div className="mx-auto mb-10 max-w-[450px] rounded-lg bg-white shadow-lg overflow-hidden">
+                      <div className="relative ">
+                        <img
+                          src={`data:${post.imageType};base64,${post.imageData}`}
+                          alt={post.title}
+                          className="w-full"
+                        />
                         <button
                           onClick={() => handleEdit(post.id)}
-                          className="inline-block rounded bg-yellow-500 py-2 px-4 text-white font-semibold hover:bg-yellow-400"
+                          className="absolute text-lg top-2  right-2 rounded-full bg-white py-2 px-2 text-black font-bold hover:bg-orange-400 hover:scale-125"
                         >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(post.id)}
-                          className="inline-block rounded bg-red py-2 px-4 text-white font-semibold hover:bg-red-400"
-                        >
-                          Delete
+                          <LiaUserEditSolid />
                         </button>
                       </div>
+                      <div className="p-6">
+                        <span className=" mb-5  inline-block rounded py-1  text-center text-sm font-semibold leading-loose text-black">
+                          {new Date(post.createdAt).toLocaleString()}
+                        </span>
+                        <h3>
+                          <a
+                            href="javascript:void(0)"
+                            className="text-dark hover:text-primary mb-4 inline-block text-xl font-semibold sm:text-2xl lg:text-xl xl:text-2xl"
+                          >
+                            {post.title}
+                          </a>
+                        </h3>
+                        <p className="text-body-color text-base">
+                          {post.description.length > 100
+                            ? post.description.substring(0, 100) + "..."
+                            : post.description}
+                        </p>
+                        <div className="flex justify-between items-center mt-6 gap-2">
+                          {/* Read More Link */}
+                          <Link
+                            href={`/posts/${post.slug}`} // Assuming you have a dynamic route for each post
+                            className="rounded bg-orange-400 text-center p-2 w-full text-white font-semibold shadow-md transition hover:bg-opacity-90 hover:shadow-lg"
+                          >
+                            Read More
+                          </Link>
+
+                          {/* Delete Button */}
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="flex items-center justify-center gap-2 w-full rounded bg-red p-2 text-white font-semibold shadow-md transition hover:bg-red hover:shadow-lg"
+                          >
+                            <MdDelete className="text-lg" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
             </motion.div>
           </div>
         </section>
