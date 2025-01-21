@@ -1,166 +1,336 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
-import axiosInstance from '@/utils/axiosInstance';
+/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect } from "react";
+import axiosInstance from "@/utils/axiosInstance";
+import DefaultLayout from "@/Components/globalComponent/Admin/Layouts/DefaultLayout";
+import ModalOpen from "@/Components/PageComponent/Adminpage/Modal";
 
-const FullContentForm = () => {
-  const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = async (data: any) => {
-    const formData = new FormData();
-    
-    // Append all fields
-    Object.keys(data).forEach((key) => {
-      if (key.includes('Image') || key === 'logo') {
-        formData.append(key, data[key][0]); // File inputs
-      } else {
-        formData.append(key, data[key]); // Other inputs
-      }
-    });
-  
-    // Log the formData
-    console.log('FormData content:');
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
-  
-    try {
-      const response = await axiosInstance.post('http://localhost:8080/api/v1/contents', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert('Content created successfully!');
-    } catch (error: any) {
-      console.error('Error:', error.response || error.message);
-      alert('Failed to create content. Please try again.');
+interface ContentFormProps {
+  contentId?: number; // Optional content ID for updating
+}
+
+const ContentForm: React.FC<ContentFormProps> = ({ contentId }) => {
+  const [formData, setFormData] = useState<any>({
+    firstName: "",
+    secondName: "",
+    description: "",
+    content2: "",
+    content21: "",
+    content3: "",
+    content31: "",
+    content32: "",
+    content33: "",
+    aboutUs: "",
+    aboutUsDescription: "",
+    link1: "",
+    link2: "",
+    link3: "",
+    link4: "",
+    mail: "",
+    phoneNumber: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const [images, setImages] = useState({
+    logoImage: null,
+    mainImage: null,
+    content3Image: null,
+    aboutUsImage: null,
+  });
+
+  useEffect(() => {
+    const contentId = 1;
+    if (contentId) {
+      // Use the dynamic contentId in the URL
+      axiosInstance
+        .get(`http://localhost:8080/api/v1/contents/${contentId}`)
+        .then((response) => {
+          const existingContent = response.data;
+
+          // Log the fetched data to the console
+          console.log("Fetched Content:", existingContent);
+
+          // Set form data with fetched content
+          setFormData({
+            firstName: existingContent.firstName || "",
+            secondName: existingContent.secondName || "",
+            description: existingContent.description || "",
+            content2: existingContent.content2 || "",
+            content21: existingContent.content21 || "",
+            content3: existingContent.content3 || "",
+            content31: existingContent.content31 || "",
+            content32: existingContent.content32 || "",
+            content33: existingContent.content33 || "",
+            aboutUs: existingContent.aboutUs || "",
+            aboutUsDescription: existingContent.aboutUsDescription || "",
+            link1: existingContent.link1 || "",
+            link2: existingContent.link2 || "",
+            link3: existingContent.link3 || "",
+            link4: existingContent.link4 || "",
+            mail: existingContent.mail || "",
+            phoneNumber: existingContent.phoneNumber || "",
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching content:", error);
+        });
+    }
+  }, [contentId]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setImages((prev) => ({ ...prev, [name]: files[0] }));
     }
   };
-  
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const form = new FormData();
+    Object.keys(formData).forEach((key) => {
+      form.append(key, formData[key]);
+    });
+
+    // Append images if they are selected
+    if (images.logoImage) form.append("logoImage", images.logoImage);
+    if (images.mainImage) form.append("mainImage", images.mainImage);
+    if (images.content3Image)
+      form.append("content3Image", images.content3Image);
+    if (images.aboutUsImage) form.append("aboutUsImage", images.aboutUsImage);
+    const contentId = 1;
+    try {
+      if (contentId) {
+        // Update existing content
+        await axiosInstance.put(`/contents/${contentId}`, form);
+        alert("Content updated successfully");
+      } else {
+        // Create new content
+        await axiosInstance.post("/contents", form);
+        alert("Content created successfully");
+      }
+    } catch (error) {
+      console.error("Error saving content:", error);
+      alert("Failed to save content");
+    }
+  };
+
   return (
     <DefaultLayout>
-      <div className="max-w-4xl mx-auto p-8 bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4">Create Full Content</h1>
-        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-          {/* Basic Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-700">First Name</label>
-              <input
-                type="text"
-                {...register('firstName', { required: true })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Second Name</label>
-              <input
-                type="text"
-                {...register('secondName', { required: true })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-          </div>
+       <button
+        onClick={handleOpenModal}
+        className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
+      >
+        Open Modal
+      </button>
+      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <h2 className="text-2xl font-semibold mb-6 text-center">Content Form</h2>
 
-          <div className="mt-4">
-            <label className="block text-gray-700">Description</label>
-            <textarea
-              {...register('description', { required: true })}
-              className="w-full p-2 border border-gray-300 rounded"
-              rows={4}
-            />
-          </div>
+     
 
-          {/* Content Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            {['content2', 'content21', 'content3', 'content31', 'content32', 'content33'].map((field) => (
-              <div key={field}>
-                <label className="block text-gray-700">{field.replace(/([0-9])/g, ' $1')}</label>
-                <input
-                  type="text"
-                  {...register(field)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-            ))}
-          </div>
+  {/* First Name & Second Name */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+    <div>
+      <label className="block text-gray-700 font-medium mb-2">First Name</label>
+      <input
+        type="text"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleInputChange}
+        required
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 font-medium mb-2">Second Name</label>
+      <input
+        type="text"
+        name="secondName"
+        value={formData.secondName}
+        onChange={handleInputChange}
+        required
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  </div>
 
-          {/* About Us Section */}
-          <div className="mt-4">
-            <label className="block text-gray-700">About Us</label>
-            <textarea
-              {...register('aboutUs')}
-              className="w-full p-2 border border-gray-300 rounded"
-              rows={4}
-            />
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700">About Us Description</label>
-            <textarea
-              {...register('aboutUsDescription')}
-              className="w-full p-2 border border-gray-300 rounded"
-              rows={4}
-            />
-          </div>
+  {/* Description */}
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">Description</label>
+    <textarea
+      name="description"
+      value={formData.description}
+      onChange={handleInputChange}
+      required
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
 
-          {/* Links */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            {Array.from({ length: 4 }, (_, index) => (
-              <div key={index + 1}>
-                <label className="block text-gray-700">{`Link ${index + 1}`}</label>
-                <input
-                  type="text"
-                  {...register(`link${index + 1}`)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-            ))}
-          </div>
+  {/* Content Fields */}
+  {['content2', 'content21', 'content3', 'content31', 'content32', 'content33'].map((content, index) => (
+    <div key={index} className="mb-4">
+      <label className="block text-gray-700 font-medium mb-2">{`Content ${index + 2}`}</label>
+      <input
+        type="text"
+        name={content}
+        value={formData[content]}
+        onChange={handleInputChange}
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  ))}
 
-          {/* Contact Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
-              <label className="block text-gray-700">Mail</label>
-              <input
-                type="email"
-                {...register('mail', { required: true })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Phone Number</label>
-              <input
-                type="tel"
-                {...register('phoneNumber', { required: true })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-          </div>
+  {/* About Us Fields */}
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">About Us</label>
+    <input
+      type="text"
+      name="aboutUs"
+      value={formData.aboutUs}
+      onChange={handleInputChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">About Us Description</label>
+    <textarea
+      name="aboutUsDescription"
+      value={formData.aboutUsDescription}
+      onChange={handleInputChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
 
-          {/* File Uploads */}
-          {['logo', 'mainImage', 'content3Image', 'aboutUsImage'].map((fileField) => (
-            <div className="mt-4" key={fileField}>
-              <label className="block text-gray-700">{fileField.replace(/([A-Z])/g, ' $1')}</label>
-              <input
-                type="file"
-                {...register(fileField)}
-                className="w-full"
-                accept="image/*"
-              />
-            </div>
-          ))}
+  {/* Link Fields */}
+  {['link1', 'link2', 'link3', 'link4'].map((link, index) => (
+    <div key={index} className="mb-4">
+      <label className="block text-gray-700 font-medium mb-2">{`Link ${index + 1}`}</label>
+      <input
+        type="text"
+        name={link}
+        value={formData[link]}
+        onChange={handleInputChange}
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  ))}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
+  {/* Contact Fields */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+    <div>
+      <label className="block text-gray-700 font-medium mb-2">Email</label>
+      <input
+        type="email"
+        name="mail"
+        value={formData.mail}
+        onChange={handleInputChange}
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
+      <input
+        type="text"
+        name="phoneNumber"
+        value={formData.phoneNumber}
+        onChange={handleInputChange}
+        className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  </div>
+
+  {/* Image Uploads */}
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">Logo Image</label>
+    <input
+      type="file"
+      name="logoImage"
+      onChange={handleImageChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">Main Image</label>
+    <input
+      type="file"
+      name="mainImage"
+      onChange={handleImageChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">Content 3 Image</label>
+    <input
+      type="file"
+      name="content3Image"
+      onChange={handleImageChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2">About Us Image</label>
+    <input
+      type="file"
+      name="aboutUsImage"
+      onChange={handleImageChange}
+      className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+
+  {/* Display images */}
+  <div className="mb-6">
+    <img
+      src="D:\\uploads\\Screenshot 2025-01-19 184732.png"
+      alt="Main Image"
+      className="w-full h-64 object-cover rounded-lg shadow-sm mb-4"
+    />
+    <img
+      src={images.content3ImagePath}
+      alt="Content Image"
+      className="w-full h-64 object-cover rounded-lg shadow-sm mb-4"
+    />
+    <img
+      src={images.aboutUsImagePath}
+      alt="About Us Image"
+      className="w-full h-64 object-cover rounded-lg shadow-sm mb-4"
+    />
+    
+    <img
+      src={`${images.logoImage}`}
+      alt="Logo"
+      className="w-32 h-32 object-cover rounded-full shadow-sm mb-4"
+    />
+  </div>
+
+
+  {/* Submit Button */}
+  <div className="text-center">
+    <button
+      type="submit"
+      className="bg-blue-500 text-white py-3 px-8 rounded-lg shadow-md hover:bg-blue-600 transition-all"
+    >
+      Save Content
+    </button>
+  </div>
+</form>
+<ModalOpen  isOpen={isModalOpen} onClose={handleCloseModal} />
     </DefaultLayout>
   );
 };
 
-export default FullContentForm;
+export default ContentForm;
