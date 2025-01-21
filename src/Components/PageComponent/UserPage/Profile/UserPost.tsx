@@ -63,17 +63,17 @@ export default function UserPost() {
 
   return (
     <motion.div
-      className="bg-white"
+      className="bg-white rounded-lg p-2"
       variants={staggerContainer(0.1, 0.1)} // Use your stagger container variant
       initial="hidden"
       animate="show"
     >
       <div className="p-4">
-        <div className="text-black  px-4  text-3xl font-semibold">
-          <h1> Posts</h1>
+        <div className="text-black   text-3xl font-semibold">
+          <h1> Your Posts</h1>
         </div>
 
-        <section className="pt-12 text-black pb-10 lg:pt-[40px] lg:pb-20">
+        <section className=" text-black pb-10 lg:pt-[40px] lg:pb-20">
           <div className="container mx-auto">
             <motion.div
               className="-mx-4 flex flex-wrap"

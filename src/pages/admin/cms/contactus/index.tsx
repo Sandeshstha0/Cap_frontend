@@ -1,86 +1,166 @@
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import axiosInstance from "@/utils/axiosInstance";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import DefaultLayout from "@/Components/globalComponent/Admin/Layouts/DefaultLayout";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import DefaultLayout from '@/Components/globalComponent/Admin/Layouts/DefaultLayout';
+import axiosInstance from '@/utils/axiosInstance';
 
-interface FormData {
-  name: string;
-  email: string;
-  message: string;
-}
+const FullContentForm = () => {
+  const { register, handleSubmit, reset } = useForm();
 
-const ContactUs: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const handleSubmits: SubmitHandler<FormData> = async (data) => {
+  const onSubmit = async (data: any) => {
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("message", data.message);
-    if (image) {
-      formData.append("image", image);
-    }
-
+    
+    // Append all fields
+    Object.keys(data).forEach((key) => {
+      if (key.includes('Image') || key === 'logo') {
+        formData.append(key, data[key][0]); // File inputs
+      } else {
+        formData.append(key, data[key]); // Other inputs
+      }
+    });
+  
+    // Log the formData
+    console.log('FormData content:');
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+  
     try {
-      const response = await axiosInstance.post("/contact-us", formData, {
+      const response = await axiosInstance.post('http://localhost:8080/api/v1/contents', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
-      toast.success("Message sent successfully");
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
+      alert('Content created successfully!');
+    } catch (error: any) {
+      console.error('Error:', error.response || error.message);
+      alert('Failed to create content. Please try again.');
     }
   };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedImage = e.target.files[0];
-      setImage(selectedImage);
-      const previewUrl = URL.createObjectURL(selectedImage);
-      setImagePreview(previewUrl);
-    }
-  };
-
+  
   return (
     <DefaultLayout>
-      <ToastContainer />
-      <div className="mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-semibold mb-6">Contact Us</h2>
-        <form onSubmit={handleSubmit(handleSubmits)}>
-        
-          {/* Image Upload */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700">
-              Upload Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="mt-1 block w-70 border border-gray-300 rounded-lg shadow-sm py-2 px-3"
-            />
-            {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 w-32 h-32 object-cover" />}
+      <div className="max-w-4xl mx-auto p-8 bg-white shadow rounded">
+        <h1 className="text-2xl font-bold mb-4">Create Full Content</h1>
+        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+          {/* Basic Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-700">First Name</label>
+              <input
+                type="text"
+                {...register('firstName', { required: true })}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Second Name</label>
+              <input
+                type="text"
+                {...register('secondName', { required: true })}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="w-50 inline-flex justify-center items-center bg-orange-500 text-white px-4 py-2 rounded-lg shadow transition"
-            >
-              Submit
-            </button>
+          <div className="mt-4">
+            <label className="block text-gray-700">Description</label>
+            <textarea
+              {...register('description', { required: true })}
+              className="w-full p-2 border border-gray-300 rounded"
+              rows={4}
+            />
           </div>
+
+          {/* Content Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {['content2', 'content21', 'content3', 'content31', 'content32', 'content33'].map((field) => (
+              <div key={field}>
+                <label className="block text-gray-700">{field.replace(/([0-9])/g, ' $1')}</label>
+                <input
+                  type="text"
+                  {...register(field)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* About Us Section */}
+          <div className="mt-4">
+            <label className="block text-gray-700">About Us</label>
+            <textarea
+              {...register('aboutUs')}
+              className="w-full p-2 border border-gray-300 rounded"
+              rows={4}
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block text-gray-700">About Us Description</label>
+            <textarea
+              {...register('aboutUsDescription')}
+              className="w-full p-2 border border-gray-300 rounded"
+              rows={4}
+            />
+          </div>
+
+          {/* Links */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index + 1}>
+                <label className="block text-gray-700">{`Link ${index + 1}`}</label>
+                <input
+                  type="text"
+                  {...register(`link${index + 1}`)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Contact Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="block text-gray-700">Mail</label>
+              <input
+                type="email"
+                {...register('mail', { required: true })}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Phone Number</label>
+              <input
+                type="tel"
+                {...register('phoneNumber', { required: true })}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+          </div>
+
+          {/* File Uploads */}
+          {['logo', 'mainImage', 'content3Image', 'aboutUsImage'].map((fileField) => (
+            <div className="mt-4" key={fileField}>
+              <label className="block text-gray-700">{fileField.replace(/([A-Z])/g, ' $1')}</label>
+              <input
+                type="file"
+                {...register(fileField)}
+                className="w-full"
+                accept="image/*"
+              />
+            </div>
+          ))}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+          >
+            Submit
+          </button>
         </form>
       </div>
     </DefaultLayout>
   );
 };
 
-export default ContactUs;
+export default FullContentForm;
