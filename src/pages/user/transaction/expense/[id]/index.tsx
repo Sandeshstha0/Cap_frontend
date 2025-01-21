@@ -1,127 +1,275 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-
-import { ExpenseData } from "@/Data/Expense";
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
-import NewExpenseModal from "@/Components/PageComponent/UserPage/Transactions/AddExpenseModal";
+import ExpenseModal from "@/Components/PageComponent/UserPage/Transactions/Income/ExpenseModal";
+import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline, MdOutlineAttachMoney } from "react-icons/md";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
 
-export default function Index() {
+const ExpenseDetail = () => {
+  const [editModalState, setEditModalState] = useState(false);
   const router = useRouter();
-  const { id } = router.query;
+  const id = Array.isArray(router.query.id)
+    ? router.query.id[0]
+    : router.query.id;
+  const [category, setCategory] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [editmodalState, seteditModalState] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [timeFilter, setTimeFilter] = useState("all");
 
-  //Open edit modal
-  const openEditModal = () => {
-    seteditModalState(true);
+  const handleBack = () => {
+    router.back();
   };
 
-  const expense = ExpenseData.find((p) => p.id === parseInt(id as string));
+  useEffect(() => {
+    if (id) {
+      axiosInstance
+        .get(`/categories/${id}`)
+        .then((response) => {
+          setCategory(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching category details:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!category) {
+    return <div>Category not found.</div>;
+  }
+
+  const filterTransactions = () => {
+    const now = dayjs();
+
+    return category.transactions.filter((txn: any) => {
+      const txnDate = dayjs(txn.date);
+      if (timeFilter === "day" && txnDate.isSame(now, "day")) return true;
+      if (timeFilter === "week" && txnDate.isSame(now, "week")) return true;
+      if (timeFilter === "month" && txnDate.isSame(now, "month")) return true;
+      if (timeFilter === "year" && txnDate.isSame(now, "year")) return true;
+      if (timeFilter === "all") return true;
+      return false;
+    });
+  };
+
+  const filteredTransactions = filterTransactions().filter((t: any) =>
+    t.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const openModalForNewTransaction = () => {
+    setSelectedTransaction(null);
+    setIsModalOpen(true);
+  };
+
+  const openModalForEditing = (transaction: any) => {
+    setSelectedTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveTransaction = (transaction: any) => {
+    if (selectedTransaction) {
+      axiosInstance
+        .put(`/transactions/${selectedTransaction.id}`, transaction)
+        .then((response) => {
+          setCategory((prevCategory: any) => ({
+            ...prevCategory,
+            transactions: prevCategory.transactions.map((t: any) =>
+              t.id === selectedTransaction.id ? { ...t, ...transaction } : t
+            ),
+          }));
+          setIsModalOpen(false);
+          toast.success("Transaction updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating transaction:", error);
+          toast.error("Failed to update transaction.");
+        });
+    } else {
+      axiosInstance
+        .post(`/transactions`, transaction)
+        .then((response) => {
+          setCategory((prevCategory: any) => ({
+            ...prevCategory,
+            transactions: [...prevCategory.transactions, response.data.data],
+          }));
+          setIsModalOpen(false);
+          toast.success("Transaction added successfully!");
+        })
+        .catch((error) => {
+          console.error("Error adding transaction:", error);
+          toast.error("Failed to add transaction.");
+        });
+    }
+  };
+
+  const handleDeleteTransaction = (transactionId: string) => {
+    if (confirm("Are you sure you want to delete this transaction?")) {
+      axiosInstance
+        .delete(`/transactions/${transactionId}`)
+        .then(() => {
+          setCategory((prevCategory: any) => ({
+            ...prevCategory,
+            transactions: prevCategory.transactions.filter(
+              (t: any) => t.id !== transactionId
+            ),
+          }));
+          toast.success("Transaction deleted successfully!");
+        })
+        .catch((error) => {
+          console.error("Error deleting transaction:", error);
+          toast.error("Failed to delete transaction.");
+        });
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (confirm("Are you sure you want to delete this category?")) {
+      try {
+        await axiosInstance.delete(`/categories/${id}`);
+        toast.success("Category deleted successfully!");
+        router.push("/categories"); // Redirect after deletion
+      } catch (error) {
+        console.error("Error deleting category:", error);
+        toast.error("Failed to delete category.");
+      }
+    }
+  };
+
   return (
     <UserLayout>
-      <div className="bg-white rounded-lg">
-        {/* Page Heading */}
-        <div className="text-left text-primary font-normal px-4 py-6 md:px-10 md:py-8 lg:px-16 lg:py-8">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">
-            Total {expense?.category}
-          </h1>
-          <p className="text-gray-600 text-sm md:text-base lg:text-lg">
-           Rs{expense?.amount}
-          </p>
-        </div>
-      </div>
+      <div>
+        <div className="bg-white p-4 rounded-lg shadow-lg mb-4 text-black">
+          <div className="flex justify-between space-x-2 ">
+            <div>
+              <h1 className="text-2xl font-bold">{category.name}</h1>
+              <p className="text-lg">
+                Total Amount:{" "}
+                <span className="text-orange-500 font-semibold text-2xl">
+                  {category.totalAmount}
+                </span>{" "}
+              </p>
+            </div>
+            <button
+              onClick={handleBack}
+              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125"
+            >
+              <IoArrowBackCircleOutline />
+            </button>
+          </div>
 
-      <div className="w-full">
-        {/* Container with white background and shadow */}
-        <div className="bg-white p-6 mt-6  space-y-5 rounded-lg shadow-lg">
-          {/* Search and Filter Section */}
-          <div className="flex justify-between items-center pb-4 border-b border-gray-200 w-full">
-            {/* Left Section - Sort by Dropdown and Search Bar */}
-
-            {/* Search Bar */}
-            <div className="relative w-3/5">
+          <div className="flex justify-between items-center mt-4  border-gray-200">
+            <div className="flex items-center space-x-4">
               <input
                 type="text"
                 placeholder="Search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="border c focus:outline-none focus:ring-2 focus:ring-orange-500 w-full px-4 py-2 rounded-md"
+                className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
               />
+              <select
+                className="border border-gray-300 px-4 py-2 rounded focus:outline-none"
+                value={timeFilter}
+                onChange={(e) => setTimeFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="day">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+              </select>
+              <button
+                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+                onClick={openModalForNewTransaction}
+              >
+                + Add New
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                onClick={handleDeleteCategory}
+              >
+                Delete Category
+              </button>
             </div>
-
-            {/* Add Expense Button */}
-            <button
-              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300"
-              onClick={openEditModal}
-            >
-              + Add Expense
-            </button>
           </div>
+        </div>
 
-          {/* Table Section */}
-          <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 rounded-lg">
-              <thead className="bg-gray-100">
+        <div className="overflow-x-auto shadow-lg bg-white p-4 rounded-lg ">
+          <div className="overflow-x-auto shadow-lg rounded-lg ">
+            <table className="min-w-full divide-y rou  divide-gray-200 rounded-lg">
+              <thead className="bg-[#f6c624] text-black rounded-lg">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-l font-medium text-black  tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
                     Amount
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
                     Date
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
                     Description
                   </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-l font-medium text-black tracking-wider">
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {expense?.transaction.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                {filteredTransactions.map((item: any) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-4 whitespace-nowrap flex items-center ">
+                      <span className="text-orange-500 font-semibold text-2xl">
+                        <MdOutlineAttachMoney  />
+                      </span>
                       {item.amount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {item.remark}
+                      {item.description}
                     </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="text-blue-600 hover:text-blue-900 mr-2">
-                        Edit
+                    <td className="px-6 py-4 whitespace-nowrap space-x-3">
+                      <button
+                        className="text-blue-600 text-2xl hover:text-blue-900 mr-2 "
+                        onClick={() => openModalForEditing(item)}
+                      >
+                        <CiEdit className="hover:scale-125" />
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        Delete
+                      <button
+                        className="text-red hover:text-red text-2xl hover:scale-125"
+                        onClick={() => handleDeleteTransaction(item.id)}
+                      >
+                        <MdDeleteOutline />
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {editmodalState && (
-              <NewExpenseModal
-                isOpen={editmodalState}
-                closeModal={() => seteditModalState(false)}
-              />
-            )}
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <ExpenseModal
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          onSave={handleSaveTransaction}
+          transaction={selectedTransaction}
+          id={id ? Number(id) : 0}
+        />
+      )}
     </UserLayout>
   );
-}
+};
+
+export default ExpenseDetail;

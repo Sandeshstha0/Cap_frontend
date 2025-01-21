@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import AddremainderModalProps from "@/Components/PageComponent/UserPage/Notification/AddremainderModal";
-import EditCategoryModal from "@/Components/PageComponent/UserPage/Transactions/ExpenseCategoryModal";
 import useFetchProtectedData from "@/hooks/useFetchProtectedData";
-import { useState } from "react";
+import {
+  addReminder,
+  deleteReminder,
+  getNotice,
+  updateReminder,
+} from "@/service/userService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { Calendar, dateFnsLocalizer, Event } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { format, parse, startOfWeek, getDay } from "date-fns";
+import enUS from "date-fns/locale/en-US";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
+import ReminderAnimation from "@/Components/Animations/ReminderAnimation";
+
 interface UserData {
   data: {
     firstname: string;
@@ -10,148 +26,276 @@ interface UserData {
   };
 }
 
-export default function Expense() {
-  const [editmodalState, seteditModalState] = useState(false);
+interface Reminder {
+  id: number;
+  title: string;
+  description: string;
+  reminderTime: string;
+}
 
-  // Open edit modal
+interface CalendarEvent extends Event {
+  id: number;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+}
+
+const locales = {
+  "en-US": enUS,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 0 }),
+  getDay,
+  locales,
+});
+
+export default function ReminderPage(): JSX.Element {
+  const [editModalState, setEditModalState] = useState(false);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reminderToEdit, setReminderToEdit] = useState<Reminder | null>(null);
+  const [view, setView] = useState<"table" | "calendar">("table");
+
   const {
     data: protectedData,
     error: apiError,
     refetchData,
-  } = useFetchProtectedData<UserData>('/user');
-  const openEditModal = () => {
-    seteditModalState(true);
+  } = useFetchProtectedData<UserData>("/user");
+
+  const calendarEvents: CalendarEvent[] = reminders.map((reminder) => ({
+    id: reminder.id,
+    title: reminder.title,
+    reminderTime: reminder.reminderTime,
+    description: reminder.description,
+    start: new Date(reminder.reminderTime),
+    end: new Date(reminder.reminderTime),
+    allDay: false,
+  }));
+
+  const handleReminderSubmit = async (reminder: {
+    id?: number;
+    title: string;
+    reminderTime: string;
+    description: string;
+  }): Promise<void> => {
+    try {
+      const [date, time] = reminder.reminderTime.split("T");
+      const payload = {
+        ...reminder,
+        date,
+        time: time.split(".")[0], // Extract time without milliseconds
+      };
+
+      if (reminder.id !== undefined) {
+        await updateReminder(payload);
+        toast.success("Reminder updated successfully!");
+      } else {
+        await addReminder(payload);
+        toast.success("Reminder added successfully!");
+      }
+      setIsModalOpen(false);
+      fetchReminders();
+    } catch (error) {
+      console.error("Error submitting reminder:", error);
+      toast.error("Failed to save the reminder. Please try again.");
+    }
   };
 
-  const [transactions] = useState([
-    { category: "Food", transactions: 20, amount: 8000 },
-  ]);
+  const handleDelete = async (id: number): Promise<void> => {
+    try {
+      await deleteReminder(id);
+      setReminders(reminders.filter((reminder) => reminder.id !== id));
+      toast.success("Reminder deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting reminder:", error);
+      toast.error("Failed to delete the reminder. Please try again.");
+    }
+  };
+
+  const openModalForEdit = (reminder: Reminder): void => {
+    setReminderToEdit(reminder);
+    setIsModalOpen(true);
+  };
+
+  const openModalForAdd = (): void => {
+    setReminderToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const fetchReminders = async (): Promise<void> => {
+    try {
+      const response = await getNotice();
+      setReminders(response.data);
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+      setError("Failed to fetch reminders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReminders();
+  }, []);
 
   return (
     <UserLayout>
-      {/* Main Content */}
+      <ToastContainer />
       <div className="flex-grow bg-gray-100">
-        <div className="bg-white rounded-lg p-6 shadow-lg">
-          {/* Total Expense */}
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">
-          Hello, {protectedData?.data?.firstname} {protectedData?.data?.secondname}!
-        </h1>
-          <p className="text-xl font-medium text-primary mb-6">
-            Welcome to Remainder Section
-          </p>
+        <div className="flex justify-between bg-white rounded-lg  shadow-lg">
+          <div className="flex space-x-4 items-center">
+            <div>
+              <ReminderAnimation />
+            </div>
+            <div>
+              <h1 className="text-xl md:text-2xl text-orange-400 lg:text-3xl font-bold mb-4">
+                Hey, {protectedData?.data?.firstname}{" "}
+                {protectedData?.data?.secondname} 👋 !
+              </h1>
+              <p className="text-lg text-slate-600 mb-2">
+                Did you miss out any thing? 🤔
+              </p>
+              <p className="text-lg text-slate-600">
+                Here you can add, edit, and delete reminders.
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="w-full">
-          {/* Container with white background and shadow */}
-          <div className="bg-white p-6 mt-5 rounded-lg shadow-lg">
-            {/* Search and Filter Section */}
-            <div className="flex justify-between items-center pb-4  border-gray-200">
-              <div className="flex items-center space-x-4">
-                {/* Sort by Dropdown */}
-                <div className="flex justify-between bg-white items-center px-2 mb-4">
-                  <div className="flex items-center space-x-3">
-                    <span>Sort by</span>
-                    <select className="border border-gray-300 rounded-md px-2 py-2">
-                      <option value="date">Date</option>
-                      <option value="amount">Amount</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Search Bar */}
-                <div className="flex justify-between space-x-3 mt- items-center px-2 mb-4">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
-                  />
-                </div>
-
-                <button
-                  className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 "
-                  onClick={openEditModal}
-                >
-                  + Add New
-                </button>
-              </div>
+        <div className="bg-white p-6 mt-5 rounded-lg shadow-lg">
+          <div className="flex justify-between items-center pb-4 border-gray-200">
+            <div className="border-2 border-gray-200 border-orange-400 rounded-lg flex space-x-4">
+              <button
+                className={`px-4 py-2 rounded-md ${
+                  view === "table" ? "bg-orange-500 text-white" : "bg-gray-300"
+                }`}
+                onClick={() => setView("table")}
+              >
+                Table View
+              </button>
+              <button
+                className={`px-4 py-2 rounded-md ${
+                  view === "calendar"
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-300"
+                }`}
+                onClick={() => setView("calendar")}
+              >
+                Calendar View
+              </button>
             </div>
-            {/* Table Section */}
+            <button
+              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+              onClick={openModalForAdd}
+            >
+              + Add New
+            </button>
+          </div>
+
+          {view === "table" && (
             <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
               <table className="min-w-full divide-y divide-gray-200 rounded-lg">
-                <thead className="bg-gray-100">
+                <thead className="bg-sky-600 text-white">
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
+                    <th className="px-6 py-3 text-left text-l font-medium">
                       Id
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black  tracking-wider"
-                    >
-                      Amount
+                    <th className="px-6 py-3 text-left text-l font-medium">
+                      Title
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
-                      Category
+                    <th className="px-6 py-3 text-left text-l font-medium">
+                      Description
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
-                      Remark
+                    <th className="px-6 py-3 text-left text-l font-medium">
+                      Reminder Time
                     </th>
-
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
-                      Date
-                    </th>
-
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-l font-medium text-black tracking-wider"
-                    >
+                    <th className="px-6 py-3 text-left text-l font-medium">
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">01</td>
-                    <td className="px-6 py-4 whitespace-nowrap">12000</td>
-                    <td className="px-6 py-4 whitespace-nowrap">Teaching</td>
-                    <td className="px-6 py-4 whitespace-nowrap">Got salary</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7th july</td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="text-blue-600 hover:text-blue-900 mr-2">
-                        Edit
-                      </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-4">
+                        Loading...
+                      </td>
+                    </tr>
+                  ) : error ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-4 text-red-600">
+                        {error}
+                      </td>
+                    </tr>
+                  ) : reminders.length > 0 ? (
+                    reminders.map((reminder) => (
+                      <tr key={reminder.id}>
+                        <td className="px-6 py-4">{reminder.id}</td>
+                        <td className="px-6 py-4">{reminder.title}</td>
+                        <td className="px-6 py-4">{reminder.description}</td>
+                        <td className="px-6 py-4">
+                          {new Date(reminder.reminderTime).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap space-x-3">
+                          <button
+                            className="text-blue-600 text-2xl hover:text-blue-900 mr-2 "
+                            onClick={() => openModalForEdit(reminder)}
+                          >
+                            <CiEdit className="hover:scale-125" />
+                          </button>
+                          <button
+                            className="text-red hover:text-red text-2xl hover:scale-125"
+                            onClick={() => handleDelete(reminder.id)}
+                          >
+                            <MdDeleteOutline />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="text-center py-4">
+                        No reminders found.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
-          </div>
+          )}
+
+          {view === "calendar" && (
+            <div className="bg-white mt-5 p-6 rounded-lg shadow-lg">
+              <Calendar
+                localizer={localizer}
+                events={calendarEvents}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 500 }}
+                onSelectEvent={(event: any) =>
+                  openModalForEdit(event as Reminder)
+                }
+              />
+            </div>
+          )}
         </div>
-        {editmodalState && (
+
+        {isModalOpen && (
           <AddremainderModalProps
-            isOpen={editmodalState}
-            closeModal={() => seteditModalState(false)}
+            isOpen={isModalOpen}
+            closeModal={() => setIsModalOpen(false)}
+            reminder={reminderToEdit}
+            isEdit={!!reminderToEdit}
+            onSubmit={handleReminderSubmit}
           />
         )}
       </div>
-
-
-      
     </UserLayout>
   );
 }

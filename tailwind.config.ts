@@ -19,6 +19,7 @@ const config: Config = {
     },
     extend: {
       colors: {
+        title:"#0295A9",
         primary:"#20364B",
         current: "currentColor",
         transparent: "transparent",
