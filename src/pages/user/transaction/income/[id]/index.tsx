@@ -145,18 +145,7 @@ const IncomeDetails = () => {
     }
   };
 
-  const handleDeleteCategory = async () => {
-    if (confirm("Are you sure you want to delete this category?")) {
-      try {
-        await axiosInstance.delete(`/categories/${id}`);
-        toast.success("Category deleted successfully!");
-        router.push("/categories");
-      } catch (error) {
-        console.error("Error deleting category:", error);
-        toast.error("Failed to delete category.");
-      }
-    }
-  };
+ 
 
   return (
     <UserLayout>
@@ -174,8 +163,8 @@ const IncomeDetails = () => {
             </div>
             <button
               onClick={handleBack}
-              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125"
-            >
+              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125 transition-transform duration-300 glow-effect"
+              >
               <IoArrowBackCircleOutline />
             </button>
           </div>

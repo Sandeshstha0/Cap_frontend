@@ -163,7 +163,7 @@ const ExpenseDetail = () => {
             </div>
             <button
               onClick={handleBack}
-              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125"
+              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125 transition-transform duration-300 glow-effect"
             >
               <IoArrowBackCircleOutline />
             </button>
@@ -229,7 +229,7 @@ const ExpenseDetail = () => {
                   <tr key={item.id}>
                     <td className="px-6 py-4 whitespace-nowrap flex items-center ">
                       <span className="text-orange-500 font-semibold text-2xl">
-                        <MdOutlineAttachMoney  />
+                        <MdOutlineAttachMoney />
                       </span>
                       {item.amount}
                     </td>
