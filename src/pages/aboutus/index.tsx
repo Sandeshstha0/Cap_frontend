@@ -4,8 +4,20 @@ import Layout from '@/Components/globalComponent/Landingpage/MainLayout';
 import React from 'react';
 import { motion } from 'framer-motion'; // Import motion
 import { fadeIn, slideInVariants } from "@/utils/motion"; // Adjust the import path accordingly
+import useFetchProtectedData from '@/hooks/useFetchProtectedData';
+interface BudgetExpert {
+  aboutUs: string;
+  aboutUsDescription: string;
+  aboutUsImagePath: string;
+}
 
 const AboutUs = () => {
+  const {
+    data: protectedData,
+    error: apiError,
+    refetchData,
+  } = useFetchProtectedData<BudgetExpert>((`http://localhost:8080/api/v1/contents/1`));
+  
   const handleClick = () => {
     alert('Button clicked!');
   };
@@ -35,7 +47,7 @@ const AboutUs = () => {
             initial="hidden"
             animate="show"
           >
-            About Us
+            {protectedData?.aboutUs}
           </motion.h2>
 
           {/* About Us image */}
@@ -58,7 +70,7 @@ const AboutUs = () => {
         animate="show"
       >
         <p className='px-6 sm:px-16 lg:px-32 py-6 text-sm sm:text-base lg:text-lg leading-relaxed'>
-          A Budget Expert is a financial professional who specializes in creating, analyzing, and managing budgets for individuals, businesses, or organizations. They are responsible for planning and developing budgets that align with financial goals, monitoring spending, and ensuring that resources are allocated efficiently. By analyzing financial data, they provide insights and recommendations for cost-saving measures and financial strategies.
+        {protectedData?.aboutUsDescription}
         </p>
 
         {/* Button Section */}

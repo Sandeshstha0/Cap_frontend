@@ -21,6 +21,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.10",
     "next": "14.2.7",
+    "papaparse": "^5.5.1",
     "react": "^18",
     "react-big-calendar": "^1.17.1",
     "react-chartjs-2": "^5.2.0",
@@ -30,6 +31,7 @@
     "react-intersection-observer": "^9.13.1",
     "react-parallax-tilt": "^1.7.248",
     "react-quill": "^2.0.0",
+    "react-table": "^7.8.0",
     "react-toastify": "^10.0.6",
     "toastify-js": "^1.12.0",
     "typed.js": "^2.1.0"
@@ -39,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-table": "^7.7.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
     "postcss": "^8",

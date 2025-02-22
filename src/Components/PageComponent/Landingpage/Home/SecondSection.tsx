@@ -4,7 +4,12 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { slideInVariants, slideIn } from "@/utils/motion";
 
-export default function SecondSection() {
+interface SectionSectionProps {
+  data: any 
+}
+
+
+const SecondSection: React.FC<SectionSectionProps> = ({ data }) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({
     triggerOnce: false, // animate only once
@@ -29,19 +34,18 @@ export default function SecondSection() {
     >
       <motion.div className="flex w-full" variants={slideIn('left', 'spring', 0.6, 1)}>
         <div className=" text-center font-bold text-6xl">
-          <h1 className="text-secondary">A Guide to</h1>
-          <h2>Proper Future</h2>
+          <h1 className="text-secondary"> {data?.content2}</h1>
         </div>
       </motion.div>
       <motion.div className="flex w-full" variants={slideInVariants}>
         <div className="flex w-full items-center justify-center">
           <p className="text-lg leading-relaxed lg:text-base xl:text-lg">
-            We want to be a part of your journey, helping you discover the
-            incorruptible beauty of nature. Let us guide you on an adventure
-            around the world, all through a single app.
+          {data?.content21}
           </p>
         </div>
       </motion.div>
     </motion.section>
   );
 }
+
+export default SecondSection;

@@ -3,8 +3,12 @@ import Image from 'next/image';
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { fadeIn, staggerContainer } from "@/utils/motion";
+interface DoYouKnowSectionProps {
+    data: any 
+  }
 
-export default function DoYouKnow() {
+const DoYouKnow: React.FC<DoYouKnowSectionProps> = ({ data }) => {
+
     // Create a ref to track the section
     const ref = useRef(null);
     const isInView = useInView(ref, { once: false, amount: 0.2 }); // amount: 0.2 triggers when 20% of the component is visible
@@ -21,7 +25,7 @@ export default function DoYouKnow() {
                     className="text-6xl font-semibold text-secondary drop-shadow-2xl"
                     variants={fadeIn('up', 'spring', 0.2, 1)}
                 >
-                    <span className="drop-shadow-2xl border-b-6 border-secondary p-2">Do you know?</span>
+                    <span className="drop-shadow-2xl border-b-6 border-secondary p-2">{data?.content3}</span>
                 </motion.h1>
             </motion.div>
             
@@ -52,7 +56,7 @@ export default function DoYouKnow() {
                             >
                                 <div className="flex-1">
                                     <div className="h-8 p-2 rounded-md bg-slate-200 text-black font-semibold text-sm">
-                                        Regularly monitor your money
+                                    {data?.content31}
                                     </div>
                                 </div>
                                 <div>
@@ -68,7 +72,7 @@ export default function DoYouKnow() {
                             >
                                 <div className="flex-1">
                                     <div className="h-8 p-2 rounded-md bg-slate-200 text-black font-semibold text-sm">
-                                        Rather than saving, invest it!!
+                                    {data?.content32}
                                     </div>
                                 </div>
                                 <div>
@@ -84,7 +88,7 @@ export default function DoYouKnow() {
                             >
                                 <div className="flex-1">
                                     <div className="h-8 p-2 rounded-md bg-slate-200 text-black font-semibold text-sm">
-                                        Invest in growth!
+                                    {data?.content33}
                                     </div>
                                 </div>
                                 <div>
@@ -110,3 +114,5 @@ export default function DoYouKnow() {
         </div>
     );
 }
+
+export default DoYouKnow;

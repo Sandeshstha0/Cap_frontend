@@ -16,6 +16,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/motion.js", "src/Components/WaveBackground .js", "src/Components/ParticlesComponent .jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/motion.js", "src/Components/WaveBackground .js", "src/Components/ParticlesComponent .jsx", "src/Components/CSV/csvfile.jsx"],
   "exclude": ["node_modules"]
 }

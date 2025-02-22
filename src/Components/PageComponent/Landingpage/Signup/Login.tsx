@@ -59,7 +59,7 @@ const Login: React.FC = () => {
 
            // Redirect based on role
       if (role === 'ADMIN') {
-        router.push('/admin/dashboard');
+        router.push('/admin/manageuser');
       } else if (role === 'USER') {
         router.push('/user/dashboard');
       } else {
