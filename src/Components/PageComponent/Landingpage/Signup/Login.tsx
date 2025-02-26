@@ -164,6 +164,11 @@ const Login: React.FC = () => {
               Login
               </button>
             </div>
+            <h1>
+              <Link href={"/auth/forgot_password"} className="text-primary hover:text-secondary font-bold">
+              Forgetten passowrd
+              </Link>
+            </h1>
 
             <p className="mt-10 text-center text-primary">
               New to Budget?{" "}

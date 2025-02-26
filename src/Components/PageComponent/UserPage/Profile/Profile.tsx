@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
-import EditModal from "./EditModal";
+import React, { useState, useEffect } from "react";
 import useFetchProtectedData from "@/hooks/useFetchProtectedData";
-import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { GiTakeMyMoney } from "react-icons/gi";
-import { MdOutlineMoneyOff } from "react-icons/md";
 import UserProfileDetail from "@/Components/globalComponent/User/UserProfileDetail";
 import axiosInstance from "@/utils/axiosInstance";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 interface UserData {
   data: {
-    id:number;
+    id: number;
     firstname: string;
     secondname: string;
     email: string;
@@ -19,138 +18,174 @@ interface UserData {
 
 export default function Profile() {
   const [editMode, setEditMode] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstname: "",
     secondname: "",
     email: "",
+    password: "",
+    confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { data: protectedData, error: apiError, refetchData } =
-    useFetchProtectedData<UserData>("/user");
+  const { data: protectedData, refetchData } = useFetchProtectedData<UserData>("/user");
 
-  // Set initial form data when user data is fetched
-  React.useEffect(() => {
+  useEffect(() => {
     if (protectedData) {
       setFormData({
         firstname: protectedData.data.firstname || "",
         secondname: protectedData.data.secondname || "",
         email: protectedData.data.email || "",
+        password: "",
+        confirmPassword: "",
       });
     }
   }, [protectedData]);
 
-  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Save updated user data
- 
-
   const handleSave = async () => {
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      toast.error("Passwords do not match!", { position: "top-right" });
+      return;
+    }
+
     try {
-      const response = await axiosInstance.put(`/user/${protectedData?.data?.id}`, formData);
-  
+      const updatedData: any = {
+        firstname: formData.firstname,
+        secondname: formData.secondname,
+        email: formData.email,
+      };
+
+      if (formData.password) {
+        updatedData.password = formData.password;
+      }
+
+      const response = await axiosInstance.put(`/user/${protectedData?.data?.id}`, updatedData);
+
       if (response.status !== 200) throw new Error("Failed to update profile");
-  
-      await refetchData(); // Refresh user data after update
+
+      await refetchData();
       setEditMode(false);
+      setError("");
+      toast.success("Profile updated successfully!", { position: "top-right" });
     } catch (error) {
       console.error("Error updating profile:", error);
+      toast.error("Failed to update profile!", { position: "top-right" });
     }
   };
-  
+
   return (
-    <div>
-      {/* Main Content */}
-      <div className="flex-1 p-0 bg-gray-50">
-        {/* Profile Section */}
-        <div className="bg-white rounded-lg text-black text-l font-normal p-8 mb-15 space-x-2">
-          <h1 className="text-3xl font-semibold text-primary mb-6">
-            User Profile
-          </h1>
+    <div className="flex-1 p-0 bg-gray-50">
+      <ToastContainer/>
+      <div className="bg-white rounded-lg text-black p-8 mb-15 space-x-2">
+        <h1 className="text-3xl font-semibold text-primary mb-6">User Profile</h1>
 
-          {/* Personal Information */}
-          <div className="flex-col space-y-6 text-black gap-10">
-            <UserProfileDetail />
+        <div className="flex-col space-y-6 gap-10">
+          <UserProfileDetail />
 
-            {/* User Info */}
-            <div className="flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-9 text-l font-normal">
-                {/* First Name */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-9 text-l font-normal">
+            <div>
+              <label className="text-bodydark2 font-medium">First Name</label>
+              <input
+                type="text"
+                name="firstname"
+                value={formData.firstname}
+                onChange={handleChange}
+                className="w-full px-2 py-2 border border-gray-300 rounded-lg mt-2"
+                disabled={!editMode}
+              />
+            </div>
+
+            <div>
+              <label className="text-bodydark2 font-medium">Last Name</label>
+              <input
+                type="text"
+                name="secondname"
+                value={formData.secondname}
+                onChange={handleChange}
+                className="w-full px-2 py-2 border border-gray-300 rounded-lg mt-2"
+                disabled={!editMode}
+              />
+            </div>
+
+            <div>
+              <label className="text-bodydark2 font-medium">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-2 py-2 border border-gray-300 rounded-lg mt-2"
+                disabled={!editMode}
+              />
+            </div>
+
+            {editMode && (
+              <>
                 <div>
-                  <label className="text-bodydark2 text-medium font-normal">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    name="firstname"
-                    value={formData.firstname}
-                    onChange={handleChange}
-                    className="w-full px-2 py-2 text-bodydark2 text-sm border border-gray-300 rounded-lg mt-2"
-                    disabled={!editMode}
-                  />
-                </div>
-
-                {/* Last Name */}
-                <div>
-                  <label className="text-gray-700 text-bodydark2 font-medium">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="secondname"
-                    value={formData.secondname}
-                    onChange={handleChange}
-                    className="w-full px-2 py-2 text-sm text-bodydark2 border border-gray-300 rounded-lg mt-2"
-                    disabled={!editMode}
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="text-gray-700 text-bodydark2 font-medium">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-2 py-2 text-bodydark2 text-sm border border-gray-300 rounded-lg mt-2"
-                    disabled={!editMode}
-                  />
-                </div>
-              </div>
-
-              {/* Edit & Save Buttons */}
-              <div className="mt-6">
-                {!editMode ? (
-                  <button
-                    onClick={() => setEditMode(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-                  >
-                    Edit Profile
-                  </button>
-                ) : (
-                  <div className="space-x-4">
+                  <label className="text-bodydark2 font-medium">New Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full px-2 py-2 border border-gray-300 rounded-lg mt-2"
+                    />
                     <button
-                      onClick={handleSave}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-2/3"
                     >
-                      Save Changes
-                    </button>
-                    <button
-                      onClick={() => setEditMode(false)}
-                      className="px-4 py-2 bg-gray-400 text-white rounded-lg"
-                    >
-                      Cancel
+                      {showPassword ? <FiEye /> : <FiEyeOff />}
                     </button>
                   </div>
-                )}
-              </div>
+                </div>
 
-            </div>
+                <div>
+                  <label className="text-bodydark2 font-medium">Confirm Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="w-full px-2 py-2 border border-gray-300 rounded-lg mt-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                    >
+                      {showPassword ? <FiEye /> : <FiEyeOff />}
+                    </button>
+                  </div>
+                </div>
+
+                {error && <p className="text-red-500">{error}</p>}
+              </>
+            )}
+          </div>
+
+          <div className="mt-6">
+            {!editMode ? (
+              <button onClick={() => setEditMode(true)} className="px-4 py-2 bg-primary text-white rounded-lg">
+                Edit Profile
+              </button>
+            ) : (
+              <div className="space-x-4">
+                <button onClick={handleSave} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+                  Save Changes
+                </button>
+                <button onClick={() => setEditMode(false)} className="px-4 py-2 bg-red text-white rounded-lg">
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

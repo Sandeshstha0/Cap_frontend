@@ -42,7 +42,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
   // Refs for sections in view
   const heroMapRef = useRef(null);
   const heroTextRef = useRef(null);
-  const heroImageRef = useRef(null);
 
   // View tracking
   const isHeroMapInView = useInView(heroMapRef, { once: false, amount: 0.25 });

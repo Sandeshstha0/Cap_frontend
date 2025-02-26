@@ -36,10 +36,8 @@ const Index: React.FC = () => {
           "Content-Type": "multipart/form-data", // Set the content type for file uploads
         },
       });
-      toast.success(
-        "Post created successfully"
-      );
-      router.push(`/user/profile`)
+      toast.success("Post created successfully");
+      router.push(`/user/post`)
       // Handle successful post creation (e.g., redirect, show success message)
     } catch (error) {
       console.error("Error creating post:", error);
@@ -70,6 +68,7 @@ const Index: React.FC = () => {
             <input
               type="text"
               id="title"
+              value="title"
               {...register("title", { required: true })}
               className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter the post title"
