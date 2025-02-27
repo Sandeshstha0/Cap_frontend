@@ -58,6 +58,8 @@ export default function ForgotPassword() {
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-md">
         <h2 className="text-2xl font-semibold text-center">Forgot Your Password?</h2>
 
+  
+
         {errorMessage && <div className="text-red text-center">{errorMessage}</div>}
         {successMessage && <div className="text-green-500 text-center">{successMessage}</div>}
 
@@ -70,7 +72,7 @@ export default function ForgotPassword() {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
               placeholder="Enter your email"
             />
@@ -78,7 +80,7 @@ export default function ForgotPassword() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none"
+            className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none"
             disabled={loading} // Disable the button when loading
           >
             {loading ?  <LoadingAnimation/>: 'Send Reset Email'}
@@ -88,7 +90,7 @@ export default function ForgotPassword() {
         <div className="text-center mt-4">
           {/* Use Link component from next/link */}
           <Link href="/login">
-            <h1 className="text-blue-500">Go back to Login</h1>
+            <h1 className="text-orange-500">Go back to Login</h1>
           </Link>
         </div>
       </div>

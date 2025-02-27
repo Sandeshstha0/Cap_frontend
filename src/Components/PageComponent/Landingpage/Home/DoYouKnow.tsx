@@ -77,7 +77,7 @@ const DoYouKnow: React.FC<DoYouKnowSectionProps> = ({ data }) => {
         {/* Right Section (Image) */}
         <div className="w-1/2 flex justify-center items-center">
           <motion.img
-            src="/55.png"
+            src={`/${data.content3ImagePath}`}
             alt="camp"
             className="w-[1000px] h-[550px] object-contain"
             variants={fadeIn('right', 'spring', 1, 1)}

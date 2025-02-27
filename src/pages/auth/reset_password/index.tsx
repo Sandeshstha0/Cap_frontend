@@ -67,7 +67,7 @@ const ResetPasswordPage = () => {
               name="token"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
               placeholder="Enter reset token"
             />
@@ -81,7 +81,7 @@ const ResetPasswordPage = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
               placeholder="Enter new password"
             />
@@ -89,7 +89,7 @@ const ResetPasswordPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none"
+            className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none"
           >
             Reset Password
           </button>
@@ -98,7 +98,7 @@ const ResetPasswordPage = () => {
         <div className="text-center mt-4">
           {/* Using Next.js Link for navigation */}
           <Link href="/login">
-            <h1 className="text-blue-500">Go back to Login</h1>
+            <h1 className="text-orange-500">Go back to Login</h1>
           </Link>
         </div>
       </div>

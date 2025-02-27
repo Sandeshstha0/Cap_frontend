@@ -131,8 +131,8 @@ const menuGroups = [
         label: "Content Management",
         route: "#",
         children: [
-          // { label: "Home", route: "/admin/cms/home" },
-          // { label: "About", route: "/admin/cms/aboutus" },
+          { label: "Home", route: "/admin/cms/home" },
+          { label: "About", route: "/admin/cms/aboutus" },
           { label: "Landing Page", route:"/admin/cms/contactus" },
         ],
       },
@@ -153,15 +153,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-1">
-          {/* <Link href="/">
-            <Image
-              width={176}
-              height={176}
-              src={'/edxplor/logo.png'}
-              alt="Logo"
-              priority
-            />
-          </Link> */}
+        
 
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}

@@ -126,7 +126,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
           variants={slideIn("right", "spring", 0.8, 1)}
         >
           <Image
-            src="/hero.png"
+            src={`/${data.mainImagePath}`}
             alt="close"
             width={1000}
             height={500}
