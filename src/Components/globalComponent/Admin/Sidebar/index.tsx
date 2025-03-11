@@ -131,8 +131,8 @@ const menuGroups = [
         label: "Content Management",
         route: "#",
         children: [
-          { label: "Home", route: "/admin/cms/home" },
-          { label: "About", route: "/admin/cms/aboutus" },
+          // { label: "Home", route: "/admin/cms/home" },
+          // { label: "About", route: "/admin/cms/aboutus" },
           { label: "Landing Page", route:"/admin/cms/contactus" },
         ],
       },

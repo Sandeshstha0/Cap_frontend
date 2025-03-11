@@ -2,7 +2,9 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import DefaultLayout from "@/Components/globalComponent/Admin/Layouts/DefaultLayout";
-import { log } from "console";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 interface HomeFormProps {
   contentId?: number; // Optional content ID for updating
@@ -118,7 +120,8 @@ const HomeForm: React.FC<HomeFormProps> = ({ contentId }) => {
       if (contentId) {
         // Update existing content
         await axiosInstance.put(`/contents/${contentId}`, form);
-        alert("Content updated successfully");
+        toast.success("Content updated successfully!", { position: "top-right" });
+        
       } else {
         // Create new content
         await axiosInstance.post("/contents", form);
@@ -134,6 +137,7 @@ const HomeForm: React.FC<HomeFormProps> = ({ contentId }) => {
 
   return (
     <DefaultLayout>
+      <ToastContainer/>
       <form
         onSubmit={handleSubmit}
         className=" mx-auto p-6 bg-white rounded-lg shadow-lg"
