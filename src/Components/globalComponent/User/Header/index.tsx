@@ -2,11 +2,21 @@ import Link from "next/link";
 import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
+import { useFetchData } from '@/hooks/Landing/useFetchData';
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
+   const { data, error } = useFetchData('http://localhost:8080/api/v1/contents/1');
+  
+    if (error) {
+      return <p>Error: {error}</p>;
+    }
+  
+    if (!data) {
+      return <p>Loading...</p>;
+    }
   return (
     <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
@@ -20,6 +30,7 @@ const Header = (props: {
             }}
             className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm lg:hidden"
           >
+            
             <span className="relative block h-5.5 w-5.5 cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
                 <span
@@ -54,7 +65,7 @@ const Header = (props: {
             <Image
               width={36}
               height={36}
-              src={'/logo.png'}
+              src={`/${data.logoPath}`}
               alt="Logo"
               priority={true}
             />
@@ -65,7 +76,7 @@ const Header = (props: {
           <Image
             width={36}
             height={36}
-            src={'/logo.png'}
+            src={`/${data.logoPath}`}
             alt="Logo"
             priority={true}
           />

@@ -1,3 +1,4 @@
+import CsvFile from '@/Components/CSV/csvfile'
 import UserLayout from '@/Components/globalComponent/User/Layouts/UserLayout'
 import OverView from '@/Components/PageComponent/UserPage/Dashboard/OverView'
 import BasicLineChart from '@/Components/PageComponent/UserPage/Report/BasicLineChart'
@@ -13,6 +14,8 @@ export default function index() {
    {/* <BasicLineChart/>
    <BasicPie/> */}
    <PieChartData/>
+   {/* <CsvFile/> */}
+
 
    </div>
   

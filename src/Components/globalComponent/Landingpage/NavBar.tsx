@@ -2,9 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/router"; // Import useRouter to detect active link
+import { useFetchData } from '@/hooks/Landing/useFetchData';
 
 function Navbar() {
   const router = useRouter(); // Get the current route
+  const { data, error } = useFetchData('http://localhost:8080/api/v1/contents/1');
+  
+    if (error) {
+      return <p>Error: {error}</p>;
+    }
+  
+    if (!data) {
+      return <p>Loading...</p>;
+    }
+
 
   return (
     <nav className="bg-primary sticky top-0 left-0 w-full z-50 px-4 shadow-lg">
@@ -13,14 +24,14 @@ function Navbar() {
         <Link href={`/`}>
           <div className="flex items-center space-x-3 cursor-pointer">
             <Image
-              src="/logo.png"
+              src={`/${data.logoPath}`}
               width={50}
               height={50}
               alt="Logo"
               className="rounded-full"
             />
-            <span className="text-secondary text-lg font-semibold">Budget</span>
-            <span className="text-white text-lg font-semibold">Expert</span>
+            <span className="text-secondary text-lg font-semibold">{data?.firstName}</span>
+            <span className="text-white text-lg font-semibold">{data?.secondName}</span>
           </div>
         </Link>
 
@@ -63,7 +74,7 @@ function Navbar() {
                   : ""
               }`}
             >
-              Contact
+            
             </Link>
           </div>
 

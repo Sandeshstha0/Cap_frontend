@@ -120,7 +120,7 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Notification",
+        label: "Reminder",
         route: "/user/notification",
       },
       

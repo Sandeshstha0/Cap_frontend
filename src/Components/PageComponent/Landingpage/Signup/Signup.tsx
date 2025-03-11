@@ -8,24 +8,57 @@ import { useRouter } from "next/router";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const validateForm = () => {
+    const { firstName, lastName, email, password, confirmPassword } = formData;
+
+    // Name length validation (min 2, max 50 characters)
+    if (firstName.length < 4 || firstName.length > 12) {
+      setErrorMessage("First name must be between 4 and 12 characters.");
+      return false;
+    }
+
+    if (lastName.length < 4 || lastName.length > 12) {
+      setErrorMessage("Last name must be between 4 and 12 characters.");
+      return false;
+    }
+
+    // General validation for other fields
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      setErrorMessage("All fields are required.");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage("Password should be at least 6 characters.");
+      return false;
+    }
+
+    setErrorMessage("");
+    return true;
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -34,55 +67,45 @@ export default function Signup() {
   };
 
   const handleSignUp = async () => {
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match");
-    } else {
-      setErrorMessage("");
-      setLoading(true);
-      const submitData = { ...formData, password };
+    if (!validateForm()) return;
 
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/api/v1/auth/signup",
-          submitData
-        );
-        if (response.status === 200) {
-          toast.success(
-            "Signup successful! , Please check your email for verification"
-          );
-          // Reset form data
-          setFormData({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-          });
-          setPassword("");
-          setConfirmPassword("");
-          setTimeout(() => {
-            router.push("/auth/otpvalidation");
-          }, 1500);
-        }
-      } catch (error) {
-        toast.error("Signup failed. Please try again.");
-      }finally {
-      setLoading(false); // Reset loading to false after the request completes
-    }
+    setLoading(true);
+    const { firstName, lastName, email, password } = formData;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/auth/signup",
+        { firstName, lastName, email, password }
+      );
+      if (response.status === 200) {
+        toast.success("Signup successful! Please check your email for verification.");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setTimeout(() => {
+          router.push("/auth/otpvalidation");
+        }, 1500);
+      }
+    } catch (error) {
+      toast.error("Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white ">
-      {/* Decorative Shapes */}
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <ToastContainer />
       <div className="fixed -top-10 -right-16 rotate-45 w-24 md:w-32 h-24 md:h-32 bg-[#007296]"></div>
       <div className="fixed top-8 -right-12 rotate-45 w-16 md:w-24 h-16 md:h-24 bg-orange-500"></div>
       <div className="fixed -bottom-10 -left-16 rotate-45 w-24 md:w-32 h-24 md:h-32 bg-[#007296]"></div>
       <div className="fixed bottom-8 -left-12 rotate-45 w-16 md:w-24 h-16 md:h-24 bg-orange-500"></div>
 
-      {/* Main Container */}
       <div className="w-full max-w-4xl mx-auto bg-gradient-to-br from-white to-gray-100 shadow-lg rounded-xl md:flex overflow-hidden">
-        {/* Image Section */}
         <div className="hidden md:flex flex-col items-center justify-center w-1/2 p-4 bg-gradient-to-b from-orange-200 to-orange-400">
           <img
             src="/cuate.png"
@@ -91,10 +114,8 @@ export default function Signup() {
           />
         </div>
 
-        {/* Form Section */}
         <div className="w-full md:w-2/3 flex flex-col justify-center p-10">
           <form className="flex flex-col items-center space-y-6 w-full">
-            {/* Welcome Text */}
             <div className="text-center font-extrabold text-orange-600 text-3xl mb-4">
               Welcome to Budget Expert
             </div>
@@ -165,10 +186,11 @@ export default function Signup() {
               <input
                 className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500"
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="************"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
 
@@ -182,15 +204,18 @@ export default function Signup() {
               <input
                 className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500"
                 id="confirmPassword"
+                name="confirmPassword"
                 type={showPassword ? "text" : "password"}
                 placeholder="************"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-              )}
             </div>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <p className="text-red text-sm mt-1">{errorMessage}</p>
+            )}
 
             {/* Show Password Toggle */}
             <div className="w-full flex items-center text-sm">
@@ -198,7 +223,7 @@ export default function Signup() {
                 type="checkbox"
                 className="mr-2"
                 checked={showPassword}
-                onChange={togglePasswordVisibility}
+                onChange={() => setShowPassword(!showPassword)}
               />
               <label
                 htmlFor="showPassword"
