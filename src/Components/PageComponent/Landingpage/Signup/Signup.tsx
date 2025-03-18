@@ -28,6 +28,11 @@ export default function Signup() {
       return false;
     }
 
+    if (/^\d/.test(firstName)) {
+      setErrorMessage("First name should not start with a number.");
+      return false;
+    }
+
     if (lastName.length < 4 || lastName.length > 12) {
       setErrorMessage("Last name must be between 4 and 12 characters.");
       return false;
@@ -41,6 +46,11 @@ export default function Signup() {
 
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
+      return false;
+    }
+
+    if (password.length > 20) {
+      setErrorMessage("Password should not exceed 20 characters.");
       return false;
     }
 

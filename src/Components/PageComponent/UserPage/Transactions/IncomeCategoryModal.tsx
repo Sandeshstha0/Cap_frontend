@@ -47,6 +47,11 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       return;
     }
 
+    if (categoryName.trim().length > 10) {
+      setError("Category name cannot exceed 10 characters");
+      return;
+    }
+
     // If validation passes, call onSave and close the modal
     onSave(categoryName, category?.id);
     setCategoryName(""); // Clear the input after saving

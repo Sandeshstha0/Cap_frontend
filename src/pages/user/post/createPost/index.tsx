@@ -19,7 +19,7 @@ const Index: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>(); // Use FormData type
   const [editorContent, setEditorContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null); // State type for image
-   const router = useRouter();
+  const router = useRouter();
 
   const handleSubmits: SubmitHandler<FormData> = async (data) => {
     const formData = new FormData(); // Create a new FormData object
@@ -37,7 +37,7 @@ const Index: React.FC = () => {
         },
       });
       toast.success("Post created successfully");
-      router.push(`/user/post`)
+      router.push(`/user/post`);
       // Handle successful post creation (e.g., redirect, show success message)
     } catch (error) {
       console.error("Error creating post:", error);
@@ -53,10 +53,12 @@ const Index: React.FC = () => {
 
   return (
     <UserLayout>
-       <ToastContainer />
+      <ToastContainer />
       <div className="mx-auto p-6 bg-white shadow-md rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">Create a Post</h2>
-        <form onSubmit={handleSubmit(handleSubmits)}> {/* Corrected here */}
+        <form onSubmit={handleSubmit(handleSubmits)}>
+          {" "}
+          {/* Corrected here */}
           {/* Title */}
           <div className="mb-6">
             <label
@@ -68,13 +70,12 @@ const Index: React.FC = () => {
             <input
               type="text"
               id="title"
-              value="title"
               {...register("title", { required: true })}
               className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter the post title"
             />
           </div>
-
+      
           {/* Description */}
           <div className="mb-6">
             <label
@@ -91,7 +92,6 @@ const Index: React.FC = () => {
               placeholder="Enter a brief description"
             />
           </div>
-
           {/* ReactQuill Editor */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700">
@@ -105,7 +105,6 @@ const Index: React.FC = () => {
               placeholder="Write your content here..."
             />
           </div>
-
           {/* Image Upload */}
           <div className="mt-18">
             <label className="block text-sm font-medium text-gray-700">
@@ -118,7 +117,6 @@ const Index: React.FC = () => {
               className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3"
             />
           </div>
-
           {/* Submit Button */}
           <div className="mt-6">
             <button

@@ -33,13 +33,18 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   }, [category]);
 
   const handleSave = () => {
-    if (categoryName.trim()) {
-      onSave(categoryName.trim()); // Send the trimmed category name to the parent
+    const trimmedName = categoryName.trim();
+    if (!trimmedName) {
+      setError("Category name cannot be empty.");
+    } else if (trimmedName.length < 3) {
+      setError("Category name must be at least 3 characters long.");
+    } else if (trimmedName.length > 50) {
+      setError("Category name cannot be more than 10 characters long.");
+    } else {
+      onSave(trimmedName); // Send the trimmed category name to the parent
       setCategoryName(""); // Clear the input field
       setError(null); // Clear any previous error
       closeModal(); // Close the modal
-    } else {
-      setError("Category name cannot be empty.");
     }
   };
 

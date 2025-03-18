@@ -21,6 +21,8 @@ const IncomeDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [timeFilter, setTimeFilter] = useState<string>("all");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   const handleBack = () => {
     router.back();
@@ -52,32 +54,56 @@ const IncomeDetails = () => {
 
   const filterTransactions = () => {
     const now = dayjs();
+    let filteredTransactions = category.transactions;
 
     if (timeFilter === "day") {
-      return category.transactions.filter((txn: any) =>
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
         dayjs(txn.date).isSame(now, "day")
       );
     }
     if (timeFilter === "week") {
-      return category.transactions.filter((txn: any) =>
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
         dayjs(txn.date).isSame(now, "week")
       );
     }
     if (timeFilter === "month") {
-      return category.transactions.filter((txn: any) =>
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
         dayjs(txn.date).isSame(now, "month")
       );
     }
     if (timeFilter === "year") {
-      return category.transactions.filter((txn: any) =>
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
         dayjs(txn.date).isSame(now, "year")
       );
     }
 
-    return category.transactions;
+    if (startDate) {
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
+        dayjs(txn.date).isAfter(dayjs(startDate).subtract(1, "day"))
+      );
+    }
+
+    if (endDate) {
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
+        dayjs(txn.date).isBefore(dayjs(endDate).add(1, "day"))
+      );
+    }
+
+    if (searchTerm) {
+      filteredTransactions = filteredTransactions.filter((txn: any) =>
+        txn.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    return filteredTransactions;
   };
 
   const filteredTransactions = filterTransactions();
+
+  const totalFilteredAmount = filteredTransactions.reduce(
+    (total: number, txn: any) => total + txn.amount,
+    0
+  );
 
   const openModalForNewTransaction = () => {
     setSelectedTransaction(null);
@@ -145,57 +171,75 @@ const IncomeDetails = () => {
     }
   };
 
- 
+  const clearDates = () => {
+    setStartDate("");
+    setEndDate("");
+  };
 
   return (
     <UserLayout>
       <div>
-        <div className="bg-white p-4 rounded-lg shadow-lg mb-4 text-black">
-          <div className="flex justify-between space-x-2 ">
+        <div className="bg-white p-6 rounded-xl shadow-xl mb-6 text-black">
+          {/* Header Section */}
+          <div className="flex justify-between items-center mb-4">
             <div>
-              <h1 className="text-2xl font-bold">{category.name}</h1>
-              <p className="text-lg ">
-                Total Amount :-{" "}
-                <span className="text-orange-500 font-semibold text-2xl">
-                  {category.totalAmount}
-                </span>{" "}
+              <h1 className="text-3xl font-bold text-gray-800">
+                {category.name}
+              </h1>
+              <p className="text-lg mt-1">
+                Total Amount:
+                <span className="text-orange-500 font-semibold text-2xl ml-2">
+                  {totalFilteredAmount}
+                </span>
               </p>
             </div>
             <button
               onClick={handleBack}
-              className="text-4xl px-4 py-2 rounded-lg mb-4 text-orange-500 font-semibold hover:scale-125 transition-transform duration-300 glow-effect"
-              >
+              className="text-4xl text-orange-500 transition-transform duration-300 transform hover:scale-110"
+            >
               <IoArrowBackCircleOutline />
             </button>
           </div>
 
+          {/* Search and Add New */}
           <div className="flex justify-between mt-4 items-center  border-gray-200">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 w-full">
               <input
                 type="text"
                 placeholder="Search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
+                className="border border-gray-300 focus:outline-none w-5/6 focus:ring-2 focus:ring-orange-500 px-4 py-2 rounded-md"
               />
-              <select
-                value={timeFilter}
-                onChange={(e) => setTimeFilter(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded"
-              >
-                <option value="all">All</option>
-                <option value="day">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-              </select>
               <button
-                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+                className="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition-all w-1/6"
                 onClick={openModalForNewTransaction}
               >
                 + Add New
               </button>
             </div>
+          </div>
+
+          {/* Filters */}
+          <div className="flex mt-6 flex-wrap  space-x-4 items-center gap-4">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <button
+              className="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition-all"
+              onClick={clearDates}
+            >
+              Clear Dates
+            </button>
           </div>
         </div>
 

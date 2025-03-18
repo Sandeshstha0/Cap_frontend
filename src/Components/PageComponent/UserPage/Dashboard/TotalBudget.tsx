@@ -1,6 +1,7 @@
 import useFetchProtectedData from "@/hooks/useFetchProtectedData";
+import { getNotice } from "@/service/userService";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface BudgetData {
   data: {
@@ -17,6 +18,29 @@ export default function TotalBudget() {
     error: apiError,
     refetchData,
   } = useFetchProtectedData<BudgetData>('/budgets');
+
+  const [reminders, setReminders] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchReminders = async (): Promise<void> => {
+      try {
+        const response = await getNotice();
+        setReminders(response.data);
+      } catch (error) {
+        console.error("Error fetching reminders:", error);
+        setError("Failed to fetch reminders");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    
+
+    useEffect(() => {
+      fetchReminders();
+    }, []);
+    
 
   return (
     <div>
@@ -35,7 +59,7 @@ export default function TotalBudget() {
           {/* Card 1: Total Income */}
           <div className="bg-gradient-to-r from-pink-500 to-purple-500 w-full md:w-1/3 h-24 rounded-lg flex space-x-7 justify-center items-center shadow-lg">
             <Image
-              src="/22.png"
+              src="/income.png"
               alt="logo"
               width={100}
               height={100}
@@ -52,7 +76,7 @@ export default function TotalBudget() {
           {/* Card 2: Total Expense */}
           <div className="bg-gradient-to-r from-blue-400 to-teal-400 w-full md:w-1/3 h-24 rounded-lg flex space-x-7 justify-center items-center shadow-lg">
             <Image
-              src="/22.png"
+              src="/expense.png"
               alt="logo"
               width={100}
               height={100}
@@ -69,15 +93,17 @@ export default function TotalBudget() {
           {/* Card 3: Example Static Value */}
           <div className="bg-gradient-to-r from-green-300 to-lime-300 w-full md:w-1/3 h-24 rounded-lg flex space-x-7 justify-center items-center shadow-lg">
             <Image
-              src="/22.png"
+              src="/reminder.jpg"
               alt="logo"
-              width={100}
+              width={300}
               height={100}
               className="w-[70px] h-auto"
             />
             <div>
-              <div className="text-white text-2xl font-bold">15,000</div>
-              <div className="text-white text-sm">Total budget estimate</div>
+                <div className="text-white text-2xl font-bold">
+                {reminders.filter(reminder => reminder.upcoming).length}
+                </div>
+              <div className="text-white text-sm">Upcoming Reminders</div>
             </div>
           </div>
         </div>

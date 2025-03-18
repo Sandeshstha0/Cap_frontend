@@ -16,8 +16,9 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { CiEdit } from "react-icons/ci";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdOutlineFilterList } from "react-icons/md";
 import ReminderAnimation from "@/Components/Animations/ReminderAnimation";
+import { FaFilter } from "react-icons/fa";
 
 interface UserData {
   data: {
@@ -31,6 +32,7 @@ interface Reminder {
   title: string;
   description: string;
   reminderTime: string;
+  upcoming: string;
 }
 
 interface CalendarEvent extends Event {
@@ -61,6 +63,7 @@ export default function ReminderPage(): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reminderToEdit, setReminderToEdit] = useState<Reminder | null>(null);
   const [view, setView] = useState<"table" | "calendar">("table");
+  const [filter, setFilter] = useState<"all" | "upcoming" | "passed">("all");
 
   const {
     data: protectedData,
@@ -144,6 +147,13 @@ export default function ReminderPage(): JSX.Element {
     fetchReminders();
   }, []);
 
+  const filteredReminders = reminders.filter((reminder) => {
+    if (filter === "all") return true;
+    if (filter === "upcoming") return reminder.upcoming;
+    if (filter === "passed") return !reminder.upcoming;
+    return true;
+  });
+
   return (
     <UserLayout>
       <ToastContainer />
@@ -162,7 +172,8 @@ export default function ReminderPage(): JSX.Element {
                 Did you miss out any thing? 🤔
               </p>
               <p className="text-lg text-slate-600">
-                Here you can add, edit, and delete reminders.
+                Here you can add, edit, and delete reminders. You will also
+                receive an email notification for each reminder.
               </p>
             </div>
           </div>
@@ -190,12 +201,28 @@ export default function ReminderPage(): JSX.Element {
                 Calendar View
               </button>
             </div>
-            <button
-              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
-              onClick={openModalForAdd}
-            >
-              + Add New
-            </button>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center  bg-gray-100 p-2 rounded-lg  shadow-sm">
+                <MdOutlineFilterList className="text-gray-600" size={20} />
+                <select
+                  className="px-4 py-2 rounded-md bg-white  "
+                  value={filter}
+                  onChange={(e) =>
+                    setFilter(e.target.value as "all" | "upcoming" | "passed")
+                  }
+                >
+                  <option value="all">All</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="passed">Passed</option>
+                </select>
+              </div>
+              <button
+                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+                onClick={openModalForAdd}
+              >
+                + Add New
+              </button>
+            </div>
           </div>
 
           {view === "table" && (
@@ -204,9 +231,6 @@ export default function ReminderPage(): JSX.Element {
                 <thead className="bg-sky-600 text-white">
                   <tr>
                     <th className="px-6 py-3 text-left text-l font-medium">
-                      Id
-                    </th>
-                    <th className="px-6 py-3 text-left text-l font-medium">
                       Title
                     </th>
                     <th className="px-6 py-3 text-left text-l font-medium">
@@ -214,6 +238,9 @@ export default function ReminderPage(): JSX.Element {
                     </th>
                     <th className="px-6 py-3 text-left text-l font-medium">
                       Reminder Time
+                    </th>
+                    <th className="px-6 py-3 text-left text-l font-medium">
+                      Status
                     </th>
                     <th className="px-6 py-3 text-left text-l font-medium">
                       Action
@@ -233,15 +260,24 @@ export default function ReminderPage(): JSX.Element {
                         {error}
                       </td>
                     </tr>
-                  ) : reminders.length > 0 ? (
-                    reminders.map((reminder) => (
+                  ) : filteredReminders.length > 0 ? (
+                    filteredReminders.map((reminder) => (
                       <tr key={reminder.id}>
-                        <td className="px-6 py-4">{reminder.id}</td>
                         <td className="px-6 py-4">{reminder.title}</td>
                         <td className="px-6 py-4">{reminder.description}</td>
                         <td className="px-6 py-4">
                           {new Date(reminder.reminderTime).toLocaleString()}
                         </td>
+                        <td className="px-6 py-4">
+                          {reminder.upcoming ? (
+                            <span className="text-green-500 font-bold">
+                              Upcoming
+                            </span>
+                          ) : (
+                            <span className="text-red font-bold">Passed</span>
+                          )}
+                        </td>
+
                         <td className="px-6 py-4 whitespace-nowrap space-x-3">
                           <button
                             className="text-blue-600 text-2xl hover:text-blue-900 mr-2 "

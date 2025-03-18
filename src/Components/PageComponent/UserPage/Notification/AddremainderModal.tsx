@@ -56,6 +56,11 @@ const AddReminderModal: React.FC<AddReminderModalProps> = ({
     if (!title.trim()) validationErrors.title = "Title is required.";
     if (!reminderTime) validationErrors.reminderTime = "Reminder time is required.";
     if (!description.trim()) validationErrors.description = "Description is required.";
+    if (title.length > 10) validationErrors.title = "Title cannot exceed 10 characters.";
+    if (title.length < 3) validationErrors.title = "Title must be at least 3 characters.";
+    if (title.length > 10) validationErrors.title = "Title cannot exceed 10 characters.";
+    if (description.length < 10) validationErrors.description = "Description must be at least 10 characters.";
+    if (description.length > 50) validationErrors.description = "Description cannot exceed 50 characters.";
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };

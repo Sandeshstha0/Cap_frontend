@@ -42,7 +42,7 @@ const NewExpenseModal
               <div>
                 <label className="text-black text-xl font-medium">Amount</label>
                 <input
-                  type="text"
+                  type="number"
                   className="w-100 px-2 py-2 text-sm text-black bg-slate-200 mt-2 focus:outline-none focus:ring-1 focus:ring-offset-graydark"
                 />
               </div>
