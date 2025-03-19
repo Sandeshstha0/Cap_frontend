@@ -56,7 +56,6 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function ReminderPage(): JSX.Element {
-  const [editModalState, setEditModalState] = useState(false);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +63,6 @@ export default function ReminderPage(): JSX.Element {
   const [reminderToEdit, setReminderToEdit] = useState<Reminder | null>(null);
   const [view, setView] = useState<"table" | "calendar">("table");
   const [filter, setFilter] = useState<"all" | "upcoming" | "passed">("all");
-
   const {
     data: protectedData,
     error: apiError,
