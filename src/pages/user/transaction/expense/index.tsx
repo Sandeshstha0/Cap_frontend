@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
 import EditCategoryModal from "@/Components/PageComponent/UserPage/Transactions/ExpenseCategoryModal";
 import useFetchProtectedData from "@/hooks/useFetchProtectedData";

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts/PieChart"; // Ensure this is the correct import
 import useFetchProtectedData from "@/hooks/useFetchProtectedData";
@@ -111,34 +112,52 @@ const PieChartData: React.FC = () => {
   return (
     <div className="container bg-white mt-6 rounded-lg p-4 sm:p-10">
       <h1 className="font-semibold text-lg mb-4">PieChartData</h1>
-      <div className="flex space-x-4 items-center">
-        <h2 className="font-semibold text-xl mb-4">
-          {isIncome ? "Income" : "Expenses"}
-        </h2>
-        <button
-          onClick={() => setIsIncome(!isIncome)}
-          className="mb-4 px-4 py-2 bg-orange-500 text-white rounded"
-        >
-          Switch to {isIncome ? "Expenses" : "Income"}
-        </button>
+      <div className="flex flex-col md:flex-row md:items-center justify-between bg-white  rounded-lg ">
+        <div className="flex items-center space-x-4">
+          <h2 className="font-semibold text-xl">
+            {isIncome ? "Income" : "Expenses"}
+          </h2>
+          {/* <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isIncome}
+              onChange={() => setIsIncome(!isIncome)}
+              className="sr-only peer"
+            />
+            <div
+              className="peer rounded-full outline-none duration-100 after:duration-500 w-28 h-14 bg-orange-300 
+      peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-500  
+      after:content-['Exp'] after:absolute after:outline-none after:rounded-full 
+      after:h-12 after:w-12 after:bg-white after:top-1 after:left-1 
+      after:flex after:justify-center after:items-center after:text-orange-500 
+      after:font-bold peer-checked:after:translate-x-14 peer-checked:after:content-['Inco'] 
+      peer-checked:after:border-white"
+            ></div>
+          </label> */}
 
-        <div>
+          <button
+            onClick={() => setIsIncome(!isIncome)}
+            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition"
+          >
+            Switch to {isIncome ? "Expenses" : "Income"}
+          </button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
           <input
             type="date"
             value={startDate}
-            placeholder="start date"
             onChange={(e) => setStartDate(e.target.value)}
-            className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
+            className="border border-gray-300 focus:outline-none focus:border-orange-500 px-4 py-2 rounded-md w-40"
           />
           <input
             type="date"
-            placeholder="end date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="search-bar border border-gray-300 focus:outline-none w-150 focus:border-black px-4 py-2 rounded"
+            className="border border-gray-300 focus:outline-none focus:border-orange-500 px-4 py-2 rounded-md w-40"
           />
           <button
-            className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+            className="bg-red text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
             onClick={() => {
               setStartDate("");
               setEndDate("");
@@ -148,8 +167,9 @@ const PieChartData: React.FC = () => {
           </button>
         </div>
       </div>
+
       <div>
-        <p className="text-slate-600 mb-6">
+        <p className="text-slate-600 mb-6 mt-6">
           This report page provides a visual representation of your financial
           data. You can switch between viewing your income and expenses using
           the button below. Each category is represented in the pie chart, and

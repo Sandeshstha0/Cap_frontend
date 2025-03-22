@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import axiosInstance from '@/utils/axiosInstance';
-import UserLayout from '@/Components/globalComponent/User/Layouts/UserLayout';
-import { PieChart } from '@mui/x-charts';
-import dayjs from 'dayjs';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import axiosInstance from "@/utils/axiosInstance";
+import UserLayout from "@/Components/globalComponent/User/Layouts/UserLayout";
+import { PieChart } from "@mui/x-charts";
+import dayjs from "dayjs";
 
 export default function Index() {
   const [category, setCategory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [timeFilter, setTimeFilter] = useState<string>('all'); // Time filter state
+  const [timeFilter, setTimeFilter] = useState<string>("all"); // Time filter state
+  const [startDate, setStartDate] = useState<string>(""); // Start date state
+  const [endDate, setEndDate] = useState<string>(""); // End date state
   const router = useRouter();
   const { id } = router.query;
 
@@ -21,7 +23,7 @@ export default function Index() {
           setCategory(Array.isArray(data) ? data : [data]);
         })
         .catch((error: any) => {
-          console.error('Error fetching category details:', error);
+          console.error("Error fetching category details:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -33,38 +35,58 @@ export default function Index() {
     const now = dayjs();
     return category.flatMap((cat) =>
       cat.transactions.filter((txn: any) => {
-        if (timeFilter === 'day') return dayjs(txn.date).isSame(now, 'day');
-        if (timeFilter === 'week') return dayjs(txn.date).isSame(now, 'week');
-        if (timeFilter === 'month') return dayjs(txn.date).isSame(now, 'month');
-        if (timeFilter === 'year') return dayjs(txn.date).isSame(now, 'year');
+        const txnDate = dayjs(txn.date);
+        if (startDate && txnDate.isBefore(dayjs(startDate))) return false;
+        if (endDate && txnDate.isAfter(dayjs(endDate))) return false;
+        if (timeFilter === "day") return txnDate.isSame(now, "day");
+        if (timeFilter === "week") return txnDate.isSame(now, "week");
+        if (timeFilter === "month") return txnDate.isSame(now, "month");
+        if (timeFilter === "year") return txnDate.isSame(now, "year");
         return true; // Show all if no filter applied
       })
     );
   };
 
   const generateColor = (index: number) => {
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+    const colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"];
     return colors[index % colors.length];
   };
 
   const filteredTransactions = filterTransactions();
 
-  const pieChartData = filteredTransactions.map((transaction: any, index: number) => ({
-    id: transaction.id,
-    label: transaction.description || `Transaction ${transaction.id}`,
-    value: transaction.amount || 0,
-    color: generateColor(index),
-  }));
+  const pieChartData = filteredTransactions.map(
+    (transaction: any, index: number) => ({
+      id: transaction.id,
+      label: transaction.description || `Transaction ${transaction.id}`,
+      value: transaction.amount || 0,
+      color: generateColor(index),
+    })
+  );
 
   // Data Analysis and Description
   const totalTransactions = filteredTransactions.length;
-  const totalValue = filteredTransactions.reduce((sum, txn) => sum + txn.amount, 0);
-  const averageValue = totalTransactions > 0 ? totalValue / totalTransactions : 0;
-  const maxTransaction = Math.max(...filteredTransactions.map((txn) => txn.amount || 0), 0);
-  const minTransaction = Math.min(...filteredTransactions.map((txn) => txn.amount || 0), 0);
+  const totalValue = filteredTransactions.reduce(
+    (sum, txn) => sum + txn.amount,
+    0
+  );
+  const averageValue =
+    totalTransactions > 0 ? totalValue / totalTransactions : 0;
+  const maxTransaction = Math.max(
+    ...filteredTransactions.map((txn) => txn.amount || 0),
+    0
+  );
+  const minTransaction = Math.min(
+    ...filteredTransactions.map((txn) => txn.amount || 0),
+    0
+  );
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const clearDates = () => {
+    setStartDate("");
+    setEndDate("");
   };
 
   return (
@@ -88,6 +110,24 @@ export default function Index() {
               <option value="month">This Month</option>
               <option value="year">This Year</option>
             </select>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="px-4 py-2 border rounded-md"
+            />
+            <button
+              onClick={clearDates}
+              className="px-4 py-2 bg-red text-white rounded-md hover:bg-red-600"
+            >
+              Clear Dates
+            </button>
             <button
               onClick={handlePrint}
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 print:hidden"
@@ -100,11 +140,13 @@ export default function Index() {
           <div className="mb-6">
             <h2 className="font-semibold text-lg mb-2">Summary</h2>
             <p>
-              This category includes <strong>{totalTransactions}</strong> transactions
-              with a total value of <strong>Rs {totalValue.toFixed(2)}</strong>.
-              The average transaction amount is{' '}
-              <strong>Rs {averageValue.toFixed(2)}</strong>. The largest transaction was{' '}
-              <strong>Rs {maxTransaction.toFixed(2)}</strong>, and the smallest was{' '}
+              This category includes <strong>{totalTransactions}</strong>{" "}
+              transactions with a total value of{" "}
+              <strong>Rs {totalValue.toFixed(2)}</strong>. The average
+              transaction amount is{" "}
+              <strong>Rs {averageValue.toFixed(2)}</strong>. The largest
+              transaction was <strong>Rs {maxTransaction.toFixed(2)}</strong>,
+              and the smallest was{" "}
               <strong>Rs {minTransaction.toFixed(2)}</strong>.
             </p>
           </div>
